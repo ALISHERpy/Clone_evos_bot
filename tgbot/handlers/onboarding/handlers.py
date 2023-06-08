@@ -32,14 +32,13 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
 
 def secret_level(update: Update, context: CallbackContext) -> None:
-    # callback_data: SECRET_LEVEL_BUTTON variable from manage_data.py
-    """ Pressed 'secret_level_button_text' after /start command"""
+    
     user_id = extract_user_data_from_update(update)['user_id']
     text = static_text.unlock_secret_room.format(
         user_count=User.objects.count(),
         active_24=User.objects.filter(updated_at__gte=timezone.now() - datetime.timedelta(hours=24)).count()
     )
-
+    
     context.bot.edit_message_text(
         text=text,
         chat_id=user_id,

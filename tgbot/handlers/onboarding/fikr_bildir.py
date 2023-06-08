@@ -1,5 +1,4 @@
 
-import logging
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.ext import (
@@ -12,56 +11,105 @@ from telegram.ext import (
 )
 
 from tgbot.handlers.onboarding.handlers import reply_keyboards as bosh_sahifa_tugma
+ortgaaa = [['⬅️ Ortga']]
 
-# Enable logging
-logging.basicConfig(
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO
-)
+from dtb.settings import ADMINS
+ADMINS=str(ADMINS)
+ADMINS=ADMINS.split(",")
+from users.models import User as Foydalanuvchilar
 
-logger = logging.getLogger(__name__)
+
+
+
 
 GET_CONTACT, GET_SUGGETIONS= range(2)
 
 
 def boshlaa(update: Update, context: CallbackContext) -> int:
-    """Starts the conversation and asks the user about their gender."""
+    
+    user = update.message.from_user
     reply_keyboard = [
     [
-        KeyboardButton(text="SHARE CONTACT", request_contact=True),
-    ]
-]
+        KeyboardButton(text="📞Mening raqamim", request_contact=True),
+    ] ]
 
-    update.message.reply_text("Cantact yuboring...",reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard),
+    #  tekshirish bor yo yuuu
+    u=Foydalanuvchilar.objects.get(user_id=user.id)
+    if u.contact_number:       
+        update.message.reply_text(
+        'Fikringgizni yozib qoldiring...',
+        reply_markup=ReplyKeyboardMarkup(
+            ortgaaa, one_time_keyboard=True, resize_keyboard=True
+        ),)
+        return GET_SUGGETIONS
+        #  tekshirish bor yo yuuu
+
+
+    update.message.reply_text("Siz bilan keyingi muloqot uchun kontaktni yuboring...",reply_markup=ReplyKeyboardMarkup(
+            reply_keyboard,resize_keyboard=True),
     )
-
+    
     return GET_CONTACT
 
 
 def for_contact(update: Update, context: CallbackContext) -> int:
-    reply_keyboard = [['⬅️ Ortga']]
+    
     user = update.message.from_user
-    logger.info("Gender of %s: %s", user.first_name, update.message.text)
+##### user's number set into database  by ALI
+    contact_number = update.message.contact["phone_number"]
+    user_obj = Foydalanuvchilar.objects.get(user_id=user.id)
+    user_obj.contact_number = contact_number
+    user_obj.save()
+
+    if update.message.text=="⬅️ Ortga":
+        update.message.reply_text(f"Bosh sahifa " ,reply_markup=ReplyKeyboardMarkup(
+            bosh_sahifa_tugma, one_time_keyboard=True, resize_keyboard=True
+        ),)
+        return ConversationHandler.END
+    
+    
     update.message.reply_text(
         'Fikringgizni yozib qoldiring...',
         reply_markup=ReplyKeyboardMarkup(
-            reply_keyboard, one_time_keyboard=True, resize_keyboard=True
+            ortgaaa, one_time_keyboard=True, resize_keyboard=True
         ),)
     
-
+    ##kiyingi state uchun data
+    # context.user_data['number'] = contact_number
     return GET_SUGGETIONS
 
 
 def for_suggestion(update: Update, context: CallbackContext) -> int:
-    """Stores the photo and asks for a location."""
+        #eskidan olish
+    # number = context.user_data['number'] 
+
     user = update.message.from_user
     
-    update.message.reply_text(f"{user.first_name} Fikr-mulohazangiz uchun rahmat " )
-
-    update.message.reply_text(f"Bosh sahifa " ,reply_markup=ReplyKeyboardMarkup(
+    if update.message.text=="⬅️ Ortga":
+        update.message.reply_text(f"Bosh sahifa " ,reply_markup=ReplyKeyboardMarkup(
             bosh_sahifa_tugma, one_time_keyboard=True, resize_keyboard=True
         ),)
+        
 
+    else:
+        number=Foydalanuvchilar.objects.get(user_id=user.id)   
+        number=number.contact_number
+
+        for user_id in ADMINS:
+            context.bot.send_message(chat_id=user_id, text=f"""
+            USER:  {user.full_name}\n@{user.username}\nCell phone: {number}
+
+            💬xabar yubordi👇🏻:
+            
+            {update.message.text}
+            """)
+     
+        update.message.reply_text(f"{user.first_name} Fikr-mulohazangiz uchun rahmat " ,reply_markup=ReplyKeyboardMarkup(
+            bosh_sahifa_tugma, one_time_keyboard=True, resize_keyboard=True
+
+        ),)
+
+        
     return ConversationHandler.END
 
 

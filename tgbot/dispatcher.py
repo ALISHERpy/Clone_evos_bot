@@ -51,7 +51,6 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
     
 #          ALISHER
-    GENDER, PHOTO, LOCATION, BIO = range(4)
     GET_CONTACT, GET_SUGGETIONS= range(2)
 
 
