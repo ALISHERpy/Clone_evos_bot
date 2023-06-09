@@ -23,6 +23,9 @@ class User(CreateUpdateTracker):
     last_name = models.CharField(max_length=256, **nb)
     language_code = models.CharField(max_length=8, help_text="Telegram client's lang", **nb)
     deep_link = models.CharField(max_length=64, **nb)
+    # ALI############################
+    contact_number=models.CharField( max_length=15,null=True)
+    # ALI##############################
 
     is_blocked_bot = models.BooleanField(default=False)
 
@@ -32,7 +35,7 @@ class User(CreateUpdateTracker):
     admins = AdminUserManager()  # User.admins.all()
 
     def __str__(self):
-        return f'@{self.username}' if self.username is not None else f'{self.user_id}'
+        return f'@{self.username} ' if self.username is not None else f'{self.user_id}'
 
     @classmethod
     def get_user_and_created(cls, update: Update, context: CallbackContext) -> Tuple[User, bool]:

@@ -19,11 +19,29 @@ from tgbot.handlers.onboarding import handlers as onboarding_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.main import bot
 
+#       ALISHER
+
+
+
+from telegram import Update, ForceReply
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
+
+from tgbot.handlers.onboarding import fikr_bildir as onboarding_fikir_bildir
+#       ALISHER
 
 def setup_dispatcher(dp):
     """
     Adding handlers for events from Telegram
     """
+    
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
@@ -31,6 +49,24 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
+    
+#          ALISHER
+    GET_CONTACT, GET_SUGGETIONS= range(2)
+
+
+    conv_handler = ConversationHandler(
+        entry_points=[MessageHandler(Filters.regex("^✍️ Fikr bildirish$"), onboarding_fikir_bildir.boshlaa)],
+        states={
+            GET_CONTACT: [MessageHandler(Filters.contact,  onboarding_fikir_bildir.for_contact),MessageHandler(Filters.regex("^⬅️ Ortga$"), onboarding_fikir_bildir.for_ortga)],
+            GET_SUGGETIONS: [MessageHandler(Filters.text,  onboarding_fikir_bildir.for_suggestion)],
+
+        },
+        fallbacks=[],
+    )
+
+    dp.add_handler(conv_handler)
+
+#           ALISHER
 
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
@@ -72,3 +108,4 @@ def setup_dispatcher(dp):
 
 n_workers = 0 if DEBUG else 4
 dispatcher = setup_dispatcher(Dispatcher(bot, update_queue=None, workers=n_workers, use_context=True))
+
