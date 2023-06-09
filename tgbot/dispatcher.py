@@ -1,6 +1,3 @@
-"""
-    Telegram event handlers
-"""
 from telegram.ext import (
     Dispatcher, Filters,
     CommandHandler, MessageHandler,
@@ -11,6 +8,8 @@ from dtb.settings import DEBUG
 from tgbot.handlers.broadcast_message.manage_data import CONFIRM_DECLINE_BROADCAST
 from tgbot.handlers.broadcast_message.static_text import broadcast_command
 from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
+from tgbot.handlers.menu import handlers as menu_handlers
+from tgbot.handlers.menu import static_text as menu_text 
 
 from tgbot.handlers.utils import files, error
 from tgbot.handlers.admin import handlers as admin_handlers
@@ -49,22 +48,44 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
-    
-#          ALISHER
-    GET_CONTACT, GET_SUGGETIONS= range(2)
 
+# AYMURAT
+
+    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS, MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = range(8)
 
     conv_handler = ConversationHandler(
-        entry_points=[MessageHandler(Filters.regex("^✍️ Fikr bildirish$"), onboarding_fikir_bildir.boshlaa)],
+        entry_points=[MessageHandler(Filters.text, menu_handlers.home_page)],
         states={
-            GET_CONTACT: [MessageHandler(Filters.contact,  onboarding_fikir_bildir.for_contact),MessageHandler(Filters.regex("^⬅️ Ortga$"), onboarding_fikir_bildir.for_ortga)],
-            GET_SUGGETIONS: [MessageHandler(Filters.text,  onboarding_fikir_bildir.for_suggestion)],
-
+            HOME: [MessageHandler(Filters.text, menu_handlers.home_page)],
+            MENU: [MessageHandler(Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu)],
+            # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
+            # COMMENT: [],
+            # SETTINGS: [],
+            MY_ADDRESSES: [MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"), menu_handlers.address_list)],
+            SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)]
         },
         fallbacks=[],
     )
 
     dp.add_handler(conv_handler)
+
+# AYMURAT  
+
+#          ALISHER
+    # GET_CONTACT, GET_SUGGETIONS= range(2)
+
+
+    # conv_handler = ConversationHandler(
+    #     entry_points=[MessageHandler(Filters.regex("^✍️ Fikr bildirish$"), onboarding_fikir_bildir.boshlaa)],
+    #     states={
+    #         GET_CONTACT: [MessageHandler(Filters.contact,  onboarding_fikir_bildir.for_contact),MessageHandler(Filters.regex("^⬅️ Ortga$"), onboarding_fikir_bildir.for_ortga)],
+    #         GET_SUGGETIONS: [MessageHandler(Filters.text,  onboarding_fikir_bildir.for_suggestion)],
+
+    #     },
+    #     fallbacks=[],
+    # )
+
+    # dp.add_handler(conv_handler)
 
 #           ALISHER
 
