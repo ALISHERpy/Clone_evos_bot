@@ -26,9 +26,15 @@ def command_start(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(text=text,
                               reply_markup=ReplyKeyboardMarkup(
-            reply_keyboards, one_time_keyboard=True, input_field_placeholder='Bosh sahifa',resize_keyboard=True
+            reply_keyboards, one_time_keyboard=True, input_field_placeholder='Bosh sahifa by Ali',resize_keyboard=True
         ),)
     
+def None_of_them(update: Update, context: CallbackContext) -> None:
+    
+    update.message.reply_text("Quyidagilardan birini tanlang",
+                              reply_markup=ReplyKeyboardMarkup(
+            reply_keyboards, one_time_keyboard=True, input_field_placeholder='Bosh sahifa',resize_keyboard=True
+        ),)
 
 
 def secret_level(update: Update, context: CallbackContext) -> None:
