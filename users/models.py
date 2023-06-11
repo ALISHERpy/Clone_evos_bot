@@ -26,7 +26,7 @@ class User(CreateUpdateTracker):
     # ALI############################
     contact_number=models.CharField( max_length=15,null=True)
     # ALI##############################
-
+    
     is_blocked_bot = models.BooleanField(default=False)
 
     is_admin = models.BooleanField(default=False)

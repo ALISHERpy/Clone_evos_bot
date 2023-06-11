@@ -1,3 +1,6 @@
+"""
+    Telegram event handlers
+"""
 from telegram.ext import (
     Dispatcher, Filters,
     CommandHandler, MessageHandler,
@@ -20,8 +23,6 @@ from tgbot.main import bot
 
 #       ALISHER
 
-
-
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from telegram.ext import (
@@ -34,13 +35,13 @@ from telegram.ext import (
 )
 
 from tgbot.handlers.onboarding import fikr_bildir as onboarding_fikir_bildir
+from tgbot.handlers.onboarding import languages_settings as lg_setting
 #       ALISHER
 
 def setup_dispatcher(dp):
     """
     Adding handlers for events from Telegram
-    """
-    
+    """    
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
@@ -48,10 +49,10 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
+    
+#          ALISHER
+    GET_CONTACT, GET_SUGGETIONS= range(2)
 
-# AYMURAT
-
-    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS, MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = range(8)
 
     conv_handler = ConversationHandler(
         entry_points=[MessageHandler(Filters.text, menu_handlers.home_page)],
@@ -66,28 +67,11 @@ def setup_dispatcher(dp):
         },
         fallbacks=[],
     )
-
     dp.add_handler(conv_handler)
 
-# AYMURAT  
-
-#          ALISHER
-    # GET_CONTACT, GET_SUGGETIONS= range(2)
-
-
-    # conv_handler = ConversationHandler(
-    #     entry_points=[MessageHandler(Filters.regex("^✍️ Fikr bildirish$"), onboarding_fikir_bildir.boshlaa)],
-    #     states={
-    #         GET_CONTACT: [MessageHandler(Filters.contact,  onboarding_fikir_bildir.for_contact),MessageHandler(Filters.regex("^⬅️ Ortga$"), onboarding_fikir_bildir.for_ortga)],
-    #         GET_SUGGETIONS: [MessageHandler(Filters.text,  onboarding_fikir_bildir.for_suggestion)],
-
-    #     },
-    #     fallbacks=[],
-    # )
-
-    # dp.add_handler(conv_handler)
-
 #           ALISHER
+
+
 
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
@@ -108,6 +92,9 @@ def setup_dispatcher(dp):
     dp.add_handler(MessageHandler(
         Filters.animation, files.show_file_id,
     ))
+
+    #NONE_OF_THEM
+    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, onboarding_handlers.None_of_them))
 
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)

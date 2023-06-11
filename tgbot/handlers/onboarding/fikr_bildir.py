@@ -18,10 +18,6 @@ ADMINS=str(ADMINS)
 ADMINS=ADMINS.split(",")
 from users.models import User as Foydalanuvchilar
 
-
-
-
-
 GET_CONTACT, GET_SUGGETIONS= range(2)
 
 
@@ -30,7 +26,7 @@ def boshlaa(update: Update, context: CallbackContext) -> int:
     user = update.message.from_user
     reply_keyboard = [[
         KeyboardButton(text="📞Mening raqamim", request_contact=True),
-    ]]
+    ] ]
 
     #  tekshirish bor yo yuuu
     u=Foydalanuvchilar.objects.get(user_id=user.id)
@@ -54,7 +50,7 @@ def boshlaa(update: Update, context: CallbackContext) -> int:
 def for_contact(update: Update, context: CallbackContext) -> int:
     
     user = update.message.from_user
-##### user's number set into database  by ALI
+#####set user's number  into database  by ALI
     contact_number = update.message.contact["phone_number"]
     user_obj = Foydalanuvchilar.objects.get(user_id=user.id)
     user_obj.contact_number = contact_number
