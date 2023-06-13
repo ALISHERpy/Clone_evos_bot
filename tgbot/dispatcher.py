@@ -42,50 +42,25 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
     
-<<<<<<< HEAD
-    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
-    MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
-    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
-=======
     
-    GET_CONTACT, GET_SUGGETIONS= range(2)
     HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
     MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
-   CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
->>>>>>> 305abf6678910efd7f132138ac282b9ae4c87515
-    WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
+    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
+    WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
+    GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
     #  = map(chr, range(8))
 
 
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", menu_handlers.home_page)],
         states={
-<<<<<<< HEAD
-            HOME: [
-=======
             HOME: [MessageHandler(Filters.text, menu_handlers.home_page)],
             CHOOSE: [
->>>>>>> 305abf6678910efd7f132138ac282b9ae4c87515
                 MessageHandler(Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu),
                 MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders),
                 MessageHandler(Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment),
-                # MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
+                MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
                 # Filters.text, menu_handlers.home_page,
-<<<<<<< HEAD
-            ], 
-               
-                # Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings,  
-                # Filters.text, menu_handlers.home_page,
-            
-            MENU: [MessageHandler(
-                Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list,
-                # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
-                Filters.regex(f"^{menu_text.back}$"),  menu_handlers.home_page,
-            )],
-
-            WRITE_COMMENT:[MessageHandler(Filters.contact, menu_handlers.write_comment)],
-            COMMENT_DONE:[MessageHandler(Filters.text, menu_handlers.comment_done)],
-=======
             ],
             MENU: [
                 MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list),
@@ -94,7 +69,9 @@ def setup_dispatcher(dp):
             ],
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
             COMMENT_DONE: [MessageHandler(Filters.text, menu_handlers.comment_done)],
->>>>>>> 305abf6678910efd7f132138ac282b9ae4c87515
+
+            GET_LANGUAGE: [MessageHandler(Filters.text, menu_handlers.get_lg)],
+            HAVE_DONE: [MessageHandler(Filters.text, menu_handlers.have_done)],
 
             # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
             # COMMENT: [],

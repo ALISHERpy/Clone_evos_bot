@@ -42,11 +42,7 @@ def category_list() -> ReplyKeyboardMarkup:
     ]
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> 305abf6678910efd7f132138ac282b9ae4c87515
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.comment_contact, request_contact=True), ],
@@ -58,8 +54,24 @@ def comment_get_contact() -> ReplyKeyboardMarkup:
 def get_back() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.back), ],
+    ]  
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
+
+def choose_lg() -> ReplyKeyboardMarkup:
+    x=menu_text.languages_key.split(',')
+
+    buttons = [
+        [ KeyboardButton(text=x[0]), ],
+        [ KeyboardButton(text=x[1]), ],
+    ]  
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
+def entry_lg() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text=menu_text.entry_language), ],
+        [ KeyboardButton(text=menu_text.back), ],
     ]
         
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
- 
 

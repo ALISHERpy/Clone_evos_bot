@@ -9,11 +9,13 @@ from users.models import User
 # from tgbot.handlers.menu.keyboards import 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
+    
+HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
+MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
+CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
+WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
+GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
 
-HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
-MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
-CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
-WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
 #  = map(chr, range(8))
 from dtb.settings import ADMINS
 ADMINS=str(ADMINS)
@@ -22,18 +24,45 @@ from users.models import User as BotUser
 
 
 def home_page(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Quyidagilardan birini tanlang", reply_markup=menu_keyboard.home_keyboard())
+    update.message.reply_text(text="Quyidagilardan birini tanlang", 
+                              reply_markup=menu_keyboard.home_keyboard())
 
-    return HOME
+    return CHOOSE
 
 def click_menu(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="📍 Geolokatsiyani yuboring yoki yetkazib berish manzilini tanlang", 
                               reply_markup=menu_keyboard.menu_click_keyboard())
 
-    return b
+    return MENU
 
 def my_orders(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="....Jami: 134 000 sum",)
+    update.message.reply_text(text="....Jami: 134 000 sum", reply_markup=menu_keyboard.get_back())
+
+    # return /
+
+
+
+# def settings(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+def address_list(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
+
+    return ADDRESSES_LIST
+
+def category_list(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
+
+
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=())
+
 
 
 def comment(update: Update, context: CallbackContext) -> None:
@@ -84,28 +113,39 @@ def comment_done(update: Update, context: CallbackContext) -> None:
         update.message.reply_text(f"{user.first_name} Fikr-mulohazangiz uchun rahmat " ,
          reply_markup=menu_keyboard.home_keyboard())
         
-    return HOME
+    return CHOOSE
 
 
+    # LANGUAGES SETTINGS....
+def settings(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text("Harakat tanlang:",
+         reply_markup=menu_keyboard.entry_lg())
+    
+    return GET_LANGUAGE
 
+def get_lg(update: Update, context: CallbackContext) -> int:
+    
+    user = update.message.from_user
+    if update.message.text==static_text.back:
+        update.message.reply_text(f"Bosh sahifa ",
+         reply_markup=menu_keyboard.home_keyboard())
+         
+    else:
+        update.message.reply_text("Tilni tanlang:",
+        reply_markup=menu_keyboard.choose_lg())
+        
 
-# def settings(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+    return HAVE_DONE
 
-def address_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
+def have_done(update: Update, context: CallbackContext) -> int:
+    update.message.reply_text(f"✅ Tayyor !",
+        reply_markup=menu_keyboard.home_keyboard())
+        
+    return CHOOSE
 
-    return ADDRESSES_LIST
-
-def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
-
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=())
+# def get_back(update: Update, context: CallbackContext) -> int:
+        
+#     update.message.reply_text(f"Bosh sahifa ",
+#         reply_markup=menu_keyboard.home_keyboard())
+    
+#     # return ConversationHandler.END
