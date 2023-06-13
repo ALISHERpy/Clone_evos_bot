@@ -24,13 +24,9 @@ GET_CONTACT, GET_SUGGETIONS= range(2)
 def boshlaa(update: Update, context: CallbackContext) -> int:
     
     user = update.message.from_user
-    reply_keyboard = [
-    [
+    reply_keyboard = [[
         KeyboardButton(text="📞Mening raqamim", request_contact=True),
-    ] ,[
-        KeyboardButton(text="⬅️ Ortga"),
-    ]
-    ]
+    ] ]
 
     #  tekshirish bor yo yuuu
     u=Foydalanuvchilar.objects.get(user_id=user.id)
