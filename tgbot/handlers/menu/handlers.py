@@ -11,9 +11,9 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardB
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
 HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
-MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(8, 11))
-CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(11, 14))
-WRITE_COMMENT,COMMENT_DONE = map(chr, range(14,16))
+MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
+CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
+WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
 #  = map(chr, range(8))
 from dtb.settings import ADMINS
 ADMINS=str(ADMINS)
@@ -98,13 +98,14 @@ def address_list(update: Update, context: CallbackContext) -> None:
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
-    pass
-    # update.message.reply_text(text="", reply_markup=menu_keyboard.())
+    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
 
 
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
-
-
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 # def (update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=())

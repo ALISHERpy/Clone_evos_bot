@@ -24,6 +24,8 @@ class User(CreateUpdateTracker):
     language_code = models.CharField(max_length=8, help_text="Telegram client's lang", **nb)
     deep_link = models.CharField(max_length=64, **nb)
     # ALI############################
+
+    
     contact_number=models.CharField( max_length=15,null=True)
     # ALI##############################
     

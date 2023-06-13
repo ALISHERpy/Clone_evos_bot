@@ -10,3 +10,6 @@ comment_contact = "📞Mening raqamim"
 
 back = "⬅️ Ortga"
 
+
+lg_key1="Tilni o'zgartirish" 
+lg_key2="🇺🇿 O'zbekcha,🇷🇺 Русский"
