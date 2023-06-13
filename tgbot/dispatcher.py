@@ -1,6 +1,3 @@
-"""
-    Telegram event handlers
-"""
 from telegram.ext import (
     Dispatcher, Filters,
     CommandHandler, MessageHandler,
@@ -21,8 +18,6 @@ from tgbot.handlers.onboarding import handlers as onboarding_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.main import bot
 
-#       ALISHER
-
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from telegram.ext import (
@@ -36,12 +31,9 @@ from telegram.ext import (
 
 from tgbot.handlers.onboarding import fikr_bildir as onboarding_fikir_bildir
 from tgbot.handlers.onboarding import languages_settings as lg_setting
-#       ALISHER
+
 
 def setup_dispatcher(dp):
-    """
-    Adding handlers for events from Telegram
-    """    
     # onboarding
     dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
@@ -50,28 +42,39 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
     
-#          ALISHER
+    
     GET_CONTACT, GET_SUGGETIONS= range(2)
+    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(8))
+    MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(8, 11))
+    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(11, 14))
+    #  = map(chr, range(8))
 
 
     conv_handler = ConversationHandler(
         entry_points=[MessageHandler(Filters.text, menu_handlers.home_page)],
         states={
-            HOME: [MessageHandler(Filters.text, menu_handlers.home_page)],
-            MENU: [MessageHandler(Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu)],
+            HOME: [MessageHandler(
+                Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu,
+                Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders,
+                Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment,
+                Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings,  
+                Filters.text, menu_handlers.home_page,
+            )],
+            MENU: [MessageHandler(
+                Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list,
+                Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
+                Filters.regex(f"^{menu_text.back}$"),  menu_handlers.home_page,
+            )],
             # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
             # COMMENT: [],
             # SETTINGS: [],
-            MY_ADDRESSES: [MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"), menu_handlers.address_list)],
-            SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)]
+            # MY_ADDRESSES: [MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"), menu_handlers.address_list)],
+            # SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)],
+            ADDRESSES_LIST: [MessageHandler(Filters.text, menu_handlers.)]
         },
         fallbacks=[],
     )
     dp.add_handler(conv_handler)
-
-#           ALISHER
-
-
 
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
