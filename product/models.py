@@ -8,6 +8,12 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class Location(models.Model):
+    name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
+
 class Product(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
@@ -18,6 +24,7 @@ class Product(models.Model):
 
     number_of_product = models.PositiveSmallIntegerField(default=0)
     is_mini = models.BooleanField(default=True)
+    user_locations = models.ManyToManyField(Location)
 
     def __str__(self):
         return self.name

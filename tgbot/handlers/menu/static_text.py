@@ -6,5 +6,7 @@ home_settings = "⚙️ Sozlamalar"
 address_my_addresses = "🗺 Mening manzillarim"
 address_send_location = "📍 Geolokatsiyani yuboring"
 
+comment_contact = "📞Mening raqamim"
 
 back = "⬅️ Ortga"
+

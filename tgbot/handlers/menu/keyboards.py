@@ -44,4 +44,11 @@ def category_list() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
 
+def get_back() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text=menu_text.back), ],
+    ]
+        
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
 
