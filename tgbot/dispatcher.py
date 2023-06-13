@@ -35,7 +35,7 @@ from tgbot.handlers.onboarding import languages_settings as lg_setting
 
 def setup_dispatcher(dp):
     # onboarding
-    dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
+    # dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
 
     # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
@@ -44,25 +44,25 @@ def setup_dispatcher(dp):
     
     
     GET_CONTACT, GET_SUGGETIONS= range(2)
-    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(8))
-    MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(8, 11))
-    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(11, 14))
+    HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
+    MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
+    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
     #  = map(chr, range(8))
 
 
     conv_handler = ConversationHandler(
-        entry_points=[MessageHandler(Filters.text, menu_handlers.home_page)],
+        entry_points=[CommandHandler("start", menu_handlers.home_page)],
         states={
             HOME: [MessageHandler(
                 Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu,
                 Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders,
-                Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment,
-                Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings,  
+                # Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment,
+                # Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings,  
                 Filters.text, menu_handlers.home_page,
             )],
             MENU: [MessageHandler(
                 Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list,
-                Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
+                # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
                 Filters.regex(f"^{menu_text.back}$"),  menu_handlers.home_page,
             )],
             # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
@@ -70,7 +70,10 @@ def setup_dispatcher(dp):
             # SETTINGS: [],
             # MY_ADDRESSES: [MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"), menu_handlers.address_list)],
             # SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)],
-            ADDRESSES_LIST: [MessageHandler(Filters.text, menu_handlers.)]
+            ADDRESSES_LIST: [MessageHandler(
+                Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu,
+                Filters.text, menu_handlers.category_list,
+            )]
         },
         fallbacks=[],
     )

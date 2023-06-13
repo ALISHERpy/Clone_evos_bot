@@ -16,9 +16,9 @@ def home_keyboard() -> ReplyKeyboardMarkup:
 
 def menu_click_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
-        [ KeyboardButton(text=menu_text.home_my_addresses), ],
+        [ KeyboardButton(text=menu_text.address_my_addresses), ],
         [
-            KeyboardButton(text=menu_text.home_send_location),
+            KeyboardButton(text=menu_text.address_send_location),
             KeyboardButton(text=menu_text.back),
         ],
     ]
@@ -30,6 +30,15 @@ def address_list() -> ReplyKeyboardMarkup:
         [ KeyboardButton(text="Chilonzor"), ],
         [ KeyboardButton(text="Yunusobod"), ],
         [ KeyboardButton(text=menu_text.back), ],
+    ]
+
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+
+def category_list() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text="Lavash"), KeyboardButton(text="Burger"), ],
+        [ KeyboardButton(text="Shaurma"), KeyboardButton(text="Sub"), ],
+        [ KeyboardButton(text="Hot dog"), KeyboardButton(text=menu_text.back), ],
     ]
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)

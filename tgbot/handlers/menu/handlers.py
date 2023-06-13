@@ -10,9 +10,9 @@ from users.models import User
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
-HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(8))
-MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(8, 11))
-CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(11, 14))
+HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
+MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
+CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
 #  = map(chr, range(8))
 
 def home_page(update: Update, context: CallbackContext) -> None:
@@ -28,11 +28,11 @@ def click_menu(update: Update, context: CallbackContext) -> None:
 def my_orders(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="....Jami: 134 000 sum",)
 
-def comment(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Fikringizni yuboring", reply_markup=menu_keyboard.())
+# def comment(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="Fikringizni yuboring", reply_markup=menu_keyboard.())
 
-def settings(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.())
+# def settings(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 def address_list(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
@@ -40,15 +40,15 @@ def address_list(update: Update, context: CallbackContext) -> None:
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.())
+    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
 
 
 
 # def send_location(update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="Manzil qabul qilindi", reply_markup=menu_keyboard.#())
 
-def (update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.())
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 # def (update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=())
