@@ -42,7 +42,11 @@ def category_list() -> ReplyKeyboardMarkup:
     ]
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 305abf6678910efd7f132138ac282b9ae4c87515
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.comment_contact, request_contact=True), ],

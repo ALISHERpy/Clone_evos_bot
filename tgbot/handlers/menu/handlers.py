@@ -30,7 +30,7 @@ def click_menu(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="📍 Geolokatsiyani yuboring yoki yetkazib berish manzilini tanlang", 
                               reply_markup=menu_keyboard.menu_click_keyboard())
 
-    return MENU
+    return b
 
 def my_orders(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="....Jami: 134 000 sum",)
