@@ -97,8 +97,9 @@ def address_list(update: Update, context: CallbackContext) -> None:
 
     return ADDRESSES_LIST
 
-# def category_list(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+def category_list(update: Update, context: CallbackContext) -> None:
+    pass
+    # update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 
 
