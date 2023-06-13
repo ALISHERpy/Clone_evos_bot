@@ -115,6 +115,8 @@ dtb_venv/
 # Spyder project settings
 .spyderproject
 .spyproject
+#here is visual settings
+.vscode
 
 # Rope project settings
 .ropeproject
