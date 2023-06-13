@@ -10,9 +10,9 @@ from users.models import User
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
-HOME, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(5))
-MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(5, 8))
-CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(8, 11))
+HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
+MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
+CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
 WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
 #  = map(chr, range(8))
 from dtb.settings import ADMINS
@@ -22,9 +22,10 @@ from users.models import User as BotUser
 
 
 def home_page(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Quyidagilardan birini tanlang", reply_markup=menu_keyboard.home_keyboard())
+    update.message.reply_text(text="Quyidagilardan birini tanlang", 
+                              reply_markup=menu_keyboard.home_keyboard())
 
-    return HOME
+    return CHOOSE
 
 def click_menu(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="📍 Geolokatsiyani yuboring yoki yetkazib berish manzilini tanlang", 
@@ -33,7 +34,9 @@ def click_menu(update: Update, context: CallbackContext) -> None:
     return MENU
 
 def my_orders(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="....Jami: 134 000 sum",)
+    update.message.reply_text(text="....Jami: 134 000 sum", reply_markup=menu_keyboard.get_back())
+
+    # return /
 
 
 def comment(update: Update, context: CallbackContext) -> None:

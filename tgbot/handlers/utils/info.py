@@ -1,8 +1,8 @@
 from functools import wraps
 from typing import Dict, Callable
 
-import telegram
 from telegram import Update
+import telegram
 
 from tgbot.main import bot
 
