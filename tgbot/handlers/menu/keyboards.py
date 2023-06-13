@@ -34,5 +34,19 @@ def address_list() -> ReplyKeyboardMarkup:
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
+def comment_get_contact() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text=menu_text.comment_contact, request_contact=True), ],
+        [ KeyboardButton(text=menu_text.back), ],
+    ]
+        
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
+def get_back() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text=menu_text.back), ],
+    ]
+        
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
 
