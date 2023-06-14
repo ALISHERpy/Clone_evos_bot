@@ -5,6 +5,7 @@ from telegram.ext import CallbackContext
 from tgbot.handlers.location.static_text import share_location, thanks_for_location
 from tgbot.handlers.location.keyboards import send_location_keyboard
 from users.models import User, Location
+from tgbot.handlers.menu.find_distance import calculate_driving_distance as get_distance ,get_distance_name
 
 
 def ask_for_location(update: Update, context: CallbackContext) -> None:
@@ -22,9 +23,25 @@ def location_handler(update: Update, context: CallbackContext) -> None:
     # receiving user's location
     u = User.get_user(update, context)
     lat, lon = update.message.location.latitude, update.message.location.longitude
+    # by ALI
+    name_distance= get_distance_name(lat, lon)
+    print(name_distance)
     Location.objects.create(user=u, latitude=lat, longitude=lon)
 
-    update.message.reply_text(
-        thanks_for_location,
-        reply_markup=telegram.ReplyKeyboardRemove(),
-    )
+    # BY ALI
+    my_latitude = 41.35313914241534 
+    my_longitude = 69.28806543775883  
+
+    user_latitude = lat
+    user_longitude = lon
+    
+
+    distance = get_distance(my_latitude, my_longitude, user_latitude, user_longitude)
+    distance=distance/1000
+    distance = f"{distance:.3f}"
+
+    if distance is not None:
+        update.message.reply_text(f"Siz va bizning restaront orasida {distance} kilometer bor")
+    else:
+        update.message.reply_text("Yuboriligan location bo'yicha xatolik...")
+    

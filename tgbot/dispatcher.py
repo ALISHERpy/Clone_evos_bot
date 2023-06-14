@@ -29,8 +29,6 @@ from telegram.ext import (
     CallbackContext,
 )
 
-from tgbot.handlers.onboarding import fikr_bildir as onboarding_fikir_bildir
-from tgbot.handlers.onboarding import languages_settings as lg_setting
 
 
 def setup_dispatcher(dp):
@@ -90,6 +88,7 @@ def setup_dispatcher(dp):
 
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
+    #location kelsaa
     dp.add_handler(MessageHandler(Filters.location, location_handlers.location_handler))
 
     # secret level

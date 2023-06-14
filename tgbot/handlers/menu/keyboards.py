@@ -18,7 +18,7 @@ def menu_click_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.address_my_addresses), ],
         [
-            KeyboardButton(text=menu_text.address_send_location),
+            KeyboardButton(text=menu_text.address_send_location,request_location=True),
             KeyboardButton(text=menu_text.back),
         ],
     ]

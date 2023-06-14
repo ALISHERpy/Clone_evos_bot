@@ -164,7 +164,7 @@ if TELEGRAM_TOKEN is None:
     sys.exit(1)
 
 TELEGRAM_LOGS_CHAT_ID = os.getenv("TELEGRAM_LOGS_CHAT_ID", default=None)
-
+OPENSTREET_DISTANCE="https://routing.openstreetmap.de/routed-car/route/v1/driving/"
 # -----> SENTRY
 # import sentry_sdk
 # from sentry_sdk.integrations.django import DjangoIntegration
