@@ -24,7 +24,7 @@ class Product(models.Model):
 
     number_of_product = models.PositiveSmallIntegerField(default=0)
     is_mini = models.BooleanField(default=True)
-    user_locations = models.ManyToManyField(Location)
+    # user_locations = models.ManyToManyField(Location)
 
     def __str__(self):
         return self.name

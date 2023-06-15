@@ -46,7 +46,7 @@ def setup_dispatcher(dp):
     GET_CONTACT, GET_SUGGETIONS= range(2)
     HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
     MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
-   CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
+    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
     WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
     #  = map(chr, range(8))
 
@@ -67,6 +67,13 @@ def setup_dispatcher(dp):
                 # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"),  menu_handlers.home_page),
             ],
+            ADDRESSES_LIST: [
+                MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu),
+                MessageHandler(Filters.text, menu_handlers.category_list),
+            ],
+            # TYPE_OF_LIST: [
+            #     MessageHandler(Filters.text)
+            # ]
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
             COMMENT_DONE: [MessageHandler(Filters.text, menu_handlers.comment_done)],
 
@@ -75,10 +82,7 @@ def setup_dispatcher(dp):
             # SETTINGS: [],
             # MY_ADDRESSES: [MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"), menu_handlers.address_list)],
             # SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)],
-            ADDRESSES_LIST: [MessageHandler(
-                Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu,
-                Filters.text, menu_handlers.category_list,
-            )]
+            
         },
         fallbacks=[],
     )

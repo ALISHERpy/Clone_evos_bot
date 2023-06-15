@@ -1,6 +1,6 @@
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
 from tgbot.handlers.menu import static_text as menu_text 
-
+from product.models import Category
 
 def home_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
@@ -35,18 +35,32 @@ def address_list() -> ReplyKeyboardMarkup:
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
 def category_list() -> ReplyKeyboardMarkup:
-    buttons = [
-        [ KeyboardButton(text="Lavash"), KeyboardButton(text="Burger"), ],
-        [ KeyboardButton(text="Shaurma"), KeyboardButton(text="Sub"), ],
-        [ KeyboardButton(text="Hot dog"), KeyboardButton(text=menu_text.back), ],
-    ]
+    types = Category.objects.all()
+    n = len(types)
+    if n % 2 == 0:
+        buttons = [
+            [ 
+                KeyboardButton(text=types[number].name), 
+                KeyboardButton(text=types[number+1].name),
+            ] for number in range(0, n, 2)
+        ]
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
+    else:
+        buttons = [
+            [ 
+                KeyboardButton(text=types[number].name), 
+                KeyboardButton(text=types[number+1].name) 
+            ] for number in range(0, n - 1, 2)
+        ]
+        buttons.append([ KeyboardButton(text=types[n - 1].name) ])
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.comment_contact, request_contact=True), ],
-        [ KeyboardButton(text=menu_text.back), ],
+        [ KeyboardButton(text=menu_text.back) ],
     ]
         
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)

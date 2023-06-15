@@ -38,6 +38,26 @@ def my_orders(update: Update, context: CallbackContext) -> None:
 
     # return /
 
+# def settings(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+def address_list(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
+
+    return ADDRESSES_LIST
+
+def category_list(update: Update, context: CallbackContext) -> None:
+    update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
+
+    return TYPE_OF_LIST
+
+
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+# def (update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="", reply_markup=())
+
 
 def comment(update: Update, context: CallbackContext) -> None:
     user = update.message.from_user
@@ -92,22 +112,3 @@ def comment_done(update: Update, context: CallbackContext) -> None:
 
 
 
-# def settings(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-def address_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
-
-    return ADDRESSES_LIST
-
-def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
-
-
-
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=())
