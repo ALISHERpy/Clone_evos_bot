@@ -32,10 +32,6 @@ from telegram.ext import (
 
 
 def setup_dispatcher(dp):
-    # onboarding
-    # dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
-
-    # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
@@ -46,7 +42,6 @@ def setup_dispatcher(dp):
     CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
     WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
     GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
-    #  = map(chr, range(8))
 
 
     conv_handler = ConversationHandler(
