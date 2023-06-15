@@ -10,6 +10,7 @@ from tgbot.handlers.broadcast_message.static_text import broadcast_command
 from tgbot.handlers.onboarding.manage_data import SECRET_LEVEL_BUTTON
 from tgbot.handlers.menu import handlers as menu_handlers
 from tgbot.handlers.menu import static_text as menu_text 
+from tgbot.handlers.location import static_text as location_text
 
 from tgbot.handlers.utils import files, error
 from tgbot.handlers.admin import handlers as admin_handlers
@@ -46,9 +47,9 @@ def setup_dispatcher(dp):
     CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
     WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
     GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
+    LOCATION_CONFIRM=map(chr,range(16,17))
     #  = map(chr, range(8))
-
-
+    
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", menu_handlers.home_page)],
         states={
@@ -58,10 +59,12 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders),
                 MessageHandler(Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment),
                 MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
+                
                 # Filters.text, menu_handlers.home_page,
             ],
             MENU: [
                 MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list),
+                MessageHandler(Filters.location, location_handlers.location_handler),
                 # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"),  menu_handlers.home_page),
             ],
@@ -78,6 +81,12 @@ def setup_dispatcher(dp):
             GET_LANGUAGE: [MessageHandler(Filters.text, menu_handlers.get_lg)],
             HAVE_DONE: [MessageHandler(Filters.text, menu_handlers.have_done)],
 
+            LOCATION_CONFIRM:  [
+                MessageHandler(Filters.regex(f"^{location_text.yes}$"),  menu_handlers.category_list),
+                # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
+                MessageHandler(Filters.regex(f"^{location_text.no}$"),  menu_handlers.click_menu),
+            ],
+
             # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
             # COMMENT: [],
             # SETTINGS: [],
@@ -93,7 +102,8 @@ def setup_dispatcher(dp):
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
     #location kelsaa
-    dp.add_handler(MessageHandler(Filters.location, location_handlers.location_handler))
+    # CONVERSATION HANDLER ICHIDA BO'lishi kerak bu  okkk
+
 
     # secret level
     dp.add_handler(CallbackQueryHandler(onboarding_handlers.secret_level, pattern=f"^{SECRET_LEVEL_BUTTON}"))
