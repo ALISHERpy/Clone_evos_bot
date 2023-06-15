@@ -83,6 +83,7 @@ class Location(CreateTracker):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     latitude = models.FloatField()
     longitude = models.FloatField()
+    distanations=models.CharField(max_length=256)
 
     objects = GetOrNoneManager()
 

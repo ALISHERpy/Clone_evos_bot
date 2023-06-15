@@ -1,6 +1,7 @@
 from telegram import ReplyKeyboardMarkup, KeyboardButton
 
 from tgbot.handlers.location import static_text as locations_text
+from tgbot.handlers.menu.static_text import back
 
 
 def send_location_keyboard() -> ReplyKeyboardMarkup:
@@ -14,7 +15,7 @@ def send_location_keyboard() -> ReplyKeyboardMarkup:
 def yes_or_no() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=locations_text.yes),KeyboardButton(text=locations_text.no), ],
+         [ KeyboardButton(text=back)]
         
-    ]
-    
+    ]    
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)

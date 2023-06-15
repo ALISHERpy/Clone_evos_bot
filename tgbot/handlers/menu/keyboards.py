@@ -25,12 +25,28 @@ def menu_click_keyboard() -> ReplyKeyboardMarkup:
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
-def address_list() -> ReplyKeyboardMarkup:
-    buttons = [
-        [ KeyboardButton(text="Chilonzor"), ],
-        [ KeyboardButton(text="Yunusobod"), ],
-        [ KeyboardButton(text=menu_text.back), ],
-    ]
+def address_list(objs) -> ReplyKeyboardMarkup:
+
+    types=objs
+    n = len(types)
+    if n % 2 == 0:
+        buttons = [
+            [ 
+                KeyboardButton(text=types[number].distanations), 
+                KeyboardButton(text=types[number+1].distanations),
+            ] for number in range(0, n, 2)
+        ]
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
+    else:
+        buttons = [
+            [ 
+                KeyboardButton(text=types[number].distanations), 
+                KeyboardButton(text=types[number+1].distanations) 
+            ] for number in range(0, n - 1, 2)
+        ]
+        buttons.append([ KeyboardButton(text=types[n - 1].distanations) ])
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
+
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
@@ -56,6 +72,9 @@ def category_list() -> ReplyKeyboardMarkup:
         buttons.append([ KeyboardButton(text=menu_text.back) ])
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+
+
+
 
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
