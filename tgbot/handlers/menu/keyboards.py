@@ -18,7 +18,7 @@ def menu_click_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.address_my_addresses), ],
         [
-            KeyboardButton(text=menu_text.address_send_location),
+            KeyboardButton(text=menu_text.address_send_location,request_location=True),
             KeyboardButton(text=menu_text.back),
         ],
     ]
@@ -68,8 +68,24 @@ def comment_get_contact() -> ReplyKeyboardMarkup:
 def get_back() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.back), ],
+    ]  
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
+
+def choose_lg() -> ReplyKeyboardMarkup:
+    x=menu_text.languages_key.split(',')
+
+    buttons = [
+        [ KeyboardButton(text=x[0]), ],
+        [ KeyboardButton(text=x[1]), ],
+    ]  
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+ 
+def entry_lg() -> ReplyKeyboardMarkup:
+    buttons = [
+        [ KeyboardButton(text=menu_text.entry_language), ],
+        [ KeyboardButton(text=menu_text.back), ],
     ]
         
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
- 
 

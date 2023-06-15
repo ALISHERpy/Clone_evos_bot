@@ -29,8 +29,6 @@ from telegram.ext import (
     CallbackContext,
 )
 
-from tgbot.handlers.onboarding import fikr_bildir as onboarding_fikir_bildir
-from tgbot.handlers.onboarding import languages_settings as lg_setting
 
 
 def setup_dispatcher(dp):
@@ -43,11 +41,11 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
     
     
-    GET_CONTACT, GET_SUGGETIONS= range(2)
     HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
     MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
     CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
-    WRITE_COMMENT,COMMENT_DONE = map(chr, range(11, 13))
+    WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
+    GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
     #  = map(chr, range(8))
 
 
@@ -59,7 +57,7 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu),
                 MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders),
                 MessageHandler(Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment),
-                # MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
+                MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
                 # Filters.text, menu_handlers.home_page,
             ],
             MENU: [
@@ -77,6 +75,9 @@ def setup_dispatcher(dp):
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
             COMMENT_DONE: [MessageHandler(Filters.text, menu_handlers.comment_done)],
 
+            GET_LANGUAGE: [MessageHandler(Filters.text, menu_handlers.get_lg)],
+            HAVE_DONE: [MessageHandler(Filters.text, menu_handlers.have_done)],
+
             # MY_ORDERS: [MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}"), )],
             # COMMENT: [],
             # SETTINGS: [],
@@ -86,10 +87,12 @@ def setup_dispatcher(dp):
         },
         fallbacks=[],
     )
+
     dp.add_handler(conv_handler)
 
     # location
     dp.add_handler(CommandHandler("ask_location", location_handlers.ask_for_location))
+    #location kelsaa
     dp.add_handler(MessageHandler(Filters.location, location_handlers.location_handler))
 
     # secret level
