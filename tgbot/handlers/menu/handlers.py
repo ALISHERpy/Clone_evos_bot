@@ -21,7 +21,7 @@ from dtb.settings import ADMINS
 ADMINS=str(ADMINS)
 ADMINS=ADMINS.split(",")
 from users.models import User as BotUser
-
+from users.models import Location
 
 def home_page(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="Quyidagilardan birini tanlang", 
@@ -44,12 +44,17 @@ def my_orders(update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 def address_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
+    u = BotUser.get_user(update, context)
+
+    objs = Location.objects.filter(user=u)
+
+    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list(objs=objs))
 
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
+    
+    update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
 
     return TYPE_OF_LIST
 
@@ -65,13 +70,13 @@ def category_list(update: Update, context: CallbackContext) -> None:
 # def settings(update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
-def address_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
+# def address_list(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
 
-    return ADDRESSES_LIST
+#     return ADDRESSES_LIST
 
-def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="", reply_markup=menu_keyboard.category_list())
+# def category_list(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
 
 
 # def (update: Update, context: CallbackContext) -> None:
