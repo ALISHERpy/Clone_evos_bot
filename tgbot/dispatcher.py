@@ -67,6 +67,7 @@ def setup_dispatcher(dp):
             ADDRESSES_LIST: [
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu),
                 MessageHandler(Filters.text, menu_handlers.category_list),
+                
             ],
             # TYPE_OF_LIST: [
             #     MessageHandler(Filters.text)

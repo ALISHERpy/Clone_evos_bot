@@ -57,20 +57,20 @@ def address_list(update: Update, context: CallbackContext) -> None:
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
-    
-    update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
-
     try:
         manzilimiz=context.user_data['manzil'] 
         if manzilimiz:
             u = BotUser.get_user(update, context)
             objs = Location.objects.filter(user=u,distanations=manzilimiz)
             if not objs:
-                Location.objects.create(user=u, latitude=999, longitude=888,distanations=manzilimiz)
+                Location.objects.create(user=u, latitude=121212, longitude=888,distanations=manzilimiz)
     except Exception as e:
-        print(e)
-
+        # print(e)
         pass
+    
+    update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
+
+    
 
     return TYPE_OF_LIST
 
@@ -91,8 +91,8 @@ def category_list(update: Update, context: CallbackContext) -> None:
 
 #     return ADDRESSES_LIST
 
-def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
+# def category_list(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
 
 
 # def (update: Update, context: CallbackContext) -> None:
