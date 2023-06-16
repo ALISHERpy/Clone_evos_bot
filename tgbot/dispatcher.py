@@ -33,10 +33,6 @@ from telegram.ext import (
 
 
 def setup_dispatcher(dp):
-    # onboarding
-    # dp.add_handler(CommandHandler("start", onboarding_handlers.command_start))
-
-    # admin commands
     dp.add_handler(CommandHandler("admin", admin_handlers.admin))
     dp.add_handler(CommandHandler("stats", admin_handlers.stats))
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
