@@ -84,7 +84,7 @@ def setup_dispatcher(dp):
             # SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)],
             
         },
-        fallbacks=[MessageHandler(Filters.text & ~Filters.command, onboarding_handlers.None_of_them)],
+        fallbacks=[MessageHandler(Filters.text & ~Filters.command, menu_handlers.home_page)],
     )
 
     dp.add_handler(conv_handler)

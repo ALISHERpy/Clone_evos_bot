@@ -23,7 +23,7 @@ from users.models import User as BotUser
 from users.models import Location
 
 def home_page(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Quyidagilardan birini tanlang(func:home page)", 
+    update.message.reply_text(text="Quyidagilardan birini tanlang...", 
                               reply_markup=menu_keyboard.home_keyboard())
 
     return CHOOSE

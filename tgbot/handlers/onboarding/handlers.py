@@ -41,7 +41,7 @@ def command_start(update: Update, context: CallbackContext) -> None:
 from tgbot.handlers.menu.keyboards import home_keyboard
 def None_of_them(update: Update, context: CallbackContext) -> None:
     
-    update.message.reply_text("Quyidagilardan birini tanlang (func: NONE_of_them)",
+    update.message.reply_text(f"ECHO...\n{update.message.text}",
     reply_markup=home_keyboard())
 
     return CHOOSE
