@@ -8,9 +8,7 @@ from users.models import User, Location
 from tgbot.handlers.menu.find_distance import calculate_driving_distance as get_distance ,get_distance_name
 from django.http import HttpResponse
 
-
-HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
-LOCATION_CONFIRM=map(chr,range(16,17))
+from tgbot.states import *
 
 def ask_for_location(update: Update, context: CallbackContext) -> None:
     """ Entered /ask_location command"""

@@ -18,7 +18,7 @@ from tgbot.handlers.location import handlers as location_handlers
 from tgbot.handlers.onboarding import handlers as onboarding_handlers
 from tgbot.handlers.broadcast_message import handlers as broadcast_handlers
 from tgbot.main import bot
-
+from tgbot.states import *
 from telegram import Update, ForceReply
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackContext
 from telegram.ext import (
@@ -38,12 +38,7 @@ def setup_dispatcher(dp):
     dp.add_handler(CommandHandler('export_users', admin_handlers.export_users))
     
     
-    HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
-    MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
-    CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
-    WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
-    GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
-    LOCATION_CONFIRM=map(chr,range(16,17))
+
     #  = map(chr, range(8))
     
     conv_handler = ConversationHandler(
@@ -56,7 +51,7 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.home_comment}$"),  menu_handlers.comment),
                 MessageHandler(Filters.regex(f"^{menu_text.home_settings}$"),  menu_handlers.settings),
                 
-                # Filters.text, menu_handlers.home_page,
+                
             ],
             MENU: [
                 MessageHandler(Filters.regex(f"^{menu_text.address_my_addresses}$"),  menu_handlers.address_list),
@@ -69,9 +64,7 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.text, menu_handlers.category_list),
                 
             ],
-            # TYPE_OF_LIST: [
-            #     MessageHandler(Filters.text)
-            # ]
+            
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
             COMMENT_DONE: [MessageHandler(Filters.text, menu_handlers.comment_done)],
 
@@ -91,7 +84,7 @@ def setup_dispatcher(dp):
             # SEND_LOCATION: [MessageHandler(Filters.regex(f"^{menu_text.address_send_location}$"), menu_handlers.)],
             
         },
-        fallbacks=[],
+        fallbacks=[MessageHandler(Filters.text & ~Filters.command, onboarding_handlers.None_of_them)],
     )
 
     dp.add_handler(conv_handler)
@@ -119,7 +112,7 @@ def setup_dispatcher(dp):
     ))
 
     #NONE_OF_THEM
-    dp.add_handler(MessageHandler(Filters.text & ~Filters.command, onboarding_handlers.None_of_them))
+    
 
     # handling errors
     dp.add_error_handler(error.send_stacktrace_to_tg_chat)

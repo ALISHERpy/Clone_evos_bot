@@ -12,7 +12,15 @@ from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
-
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
+from tgbot.states import *
 
 def command_start(update: Update, context: CallbackContext) -> None:
     u, created = User.get_user_and_created(update, context)
@@ -30,18 +38,14 @@ def command_start(update: Update, context: CallbackContext) -> None:
         ),)
 
 
-
-CHOOSE = map(chr, range(1)) 
 from tgbot.handlers.menu.keyboards import home_keyboard
 def None_of_them(update: Update, context: CallbackContext) -> None:
     
     update.message.reply_text("Quyidagilardan birini tanlang (func: NONE_of_them)",
     reply_markup=home_keyboard())
 
-    return ConversationHandler.END
+    return CHOOSE
     
-
-
 def secret_level(update: Update, context: CallbackContext) -> None:
     
     user_id = extract_user_data_from_update(update)['user_id']

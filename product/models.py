@@ -18,7 +18,7 @@ class Product(models.Model):
     name = models.CharField(max_length=64)
     description = models.CharField(max_length=256)
 
-    photo = models.CharField(max_length=128)
+    photo = models.FileField(upload_to=None, max_length=100)
 
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
