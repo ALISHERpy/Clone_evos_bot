@@ -8,6 +8,8 @@ from users.models import User, Location
 from tgbot.handlers.menu.find_distance import calculate_driving_distance as get_distance ,get_distance_name
 from django.http import HttpResponse
 
+from tgbot.states import *
+
 def ask_for_location(update: Update, context: CallbackContext) -> None:
     """ Entered /ask_location command"""
     u = User.get_user(update, context)
@@ -25,9 +27,7 @@ def location_handler(update: Update, context: CallbackContext) -> None:
     # by ALI
     name_distance= get_distance_name(lat, lon)
 
-    objs = Location.objects.filter(user=u,distanations=name_distance)
-    if not objs:
-        Location.objects.create(user=u, latitude=lat, longitude=lon,distanations=name_distance)
+    
 
     # BY ALI
     my_latitude = 41.35313914241534 
@@ -44,7 +44,10 @@ def location_handler(update: Update, context: CallbackContext) -> None:
     if distance is not None:
         update.message.reply_text(f"<b>Masofa</b>: {distance} km.\n\n<b>Manzil</b> : {name_distance}",parse_mode='HTML')
         update.message.reply_text("Bu siz yuborgan manzilinggizmi?",reply_markup=yes_or_no())
-        return HttpResponse("OK")
+        context.user_data['manzil'] = name_distance
+        return LOCATION_CONFIRM     
+        
+
     else:
         update.message.reply_text("Yuboriligan location bo'yicha xatolik...")
-    
+        return CHOOSE 

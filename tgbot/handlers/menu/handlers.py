@@ -10,11 +10,10 @@ from users.models import User
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
     
-HOME, CHOOSE, MENU, MY_ORDERS, COMMENT, SETTINGS = map(chr, range(6))
-MY_ADDRESSES, SEND_LOCATION, ADDRESSES_LIST, = map(chr, range(6, 9))
-CATEGORY_LIST, TYPE_OF_LIST, NUMBER_OF_PRODUCKT = map(chr, range(9, 12))
-WRITE_COMMENT,COMMENT_DONE = map(chr, range(12, 14))
-GET_LANGUAGE, HAVE_DONE= map(chr, range(14, 16))
+from tgbot.states import *
+
+
+
 
 #  = map(chr, range(8))
 from dtb.settings import ADMINS
@@ -24,7 +23,7 @@ from users.models import User as BotUser
 from users.models import Location
 
 def home_page(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Quyidagilardan birini tanlang", 
+    update.message.reply_text(text="Quyidagilardan birini tanlang...", 
                               reply_markup=menu_keyboard.home_keyboard())
 
     return CHOOSE
@@ -53,8 +52,20 @@ def address_list(update: Update, context: CallbackContext) -> None:
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
+    try:
+        manzilimiz=context.user_data['manzil'] 
+        if manzilimiz:
+            u = BotUser.get_user(update, context)
+            objs = Location.objects.filter(user=u,distanations=manzilimiz)
+            if not objs:
+                Location.objects.create(user=u, latitude=121212, longitude=888,distanations=manzilimiz)
+    except Exception as e:
+        # print(e)
+        pass
     
     update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
+
+    
 
     return TYPE_OF_LIST
 

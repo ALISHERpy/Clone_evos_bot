@@ -12,7 +12,15 @@ from tgbot.handlers.onboarding.keyboards import make_keyboard_for_start_command
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 
-reply_keyboards = [['🍴 Menyu'],["🛍 Mening buyurtmalarim"],["✍️ Fikr bildirish","⚙️ Sozlamalar"]]
+from telegram.ext import (
+    Updater,
+    CommandHandler,
+    MessageHandler,
+    Filters,
+    ConversationHandler,
+    CallbackContext,
+)
+from tgbot.states import *
 
 def command_start(update: Update, context: CallbackContext) -> None:
     u, created = User.get_user_and_created(update, context)
@@ -28,15 +36,16 @@ def command_start(update: Update, context: CallbackContext) -> None:
                               reply_markup=ReplyKeyboardMarkup(
             reply_keyboards, one_time_keyboard=True, input_field_placeholder='Bosh sahifa by Ali',resize_keyboard=True
         ),)
-    
+
+
+from tgbot.handlers.menu.keyboards import home_keyboard
 def None_of_them(update: Update, context: CallbackContext) -> None:
     
-    update.message.reply_text("Quyidagilardan birini tanlang",
-                              reply_markup=ReplyKeyboardMarkup(
-            reply_keyboards, one_time_keyboard=True, input_field_placeholder='Bosh sahifa',resize_keyboard=True
-        ),)
+    update.message.reply_text(f"ECHO...\n{update.message.text}",
+    reply_markup=home_keyboard())
 
-
+    return CHOOSE
+    
 def secret_level(update: Update, context: CallbackContext) -> None:
     
     user_id = extract_user_data_from_update(update)['user_id']
