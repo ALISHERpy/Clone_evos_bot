@@ -75,8 +75,8 @@ def category_list(update: Update, context: CallbackContext) -> None:
 
 #     return ADDRESSES_LIST
 
-def category_list(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
+# def category_list(update: Update, context: CallbackContext) -> None:
+#     update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
 
 
 # def (update: Update, context: CallbackContext) -> None:
