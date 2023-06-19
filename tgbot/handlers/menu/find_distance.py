@@ -15,7 +15,7 @@ def get_distance_name(latitude, longitude):
     return None
 
 def calculate_driving_distance(origin_lat, origin_lon, destination_lat, destination_lon):
-    url =OPENSTREET_DISTANCE
+    url = OPENSTREET_DISTANCE
     url += f"{origin_lon},{origin_lat};{destination_lon},{destination_lat}"
     
    
