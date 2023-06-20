@@ -8,6 +8,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardB
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
     
 from tgbot.states import *
+from product.models import Category
 
 
 from dtb.settings import ADMINS
@@ -54,7 +55,6 @@ def category_list(update: Update, context: CallbackContext) -> None:
             if not objs:
                 Location.objects.create(user=u, latitude=121212, longitude=888,distanations=manzilimiz)
     except Exception as e:
-        # print(e)
         pass
     
     update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
@@ -62,25 +62,15 @@ def category_list(update: Update, context: CallbackContext) -> None:
     
     return TYPE_OF_LIST
 
+def product_list(update: Update, context: CallbackContext) -> None:
+    letter = update.message.text
 
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+    if Category.objects.filter(name=letter):
+        update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.product_list(letter=letter))
+    else:
+        update.message.reply_text(text="Something wrong!\nTry again, plase!", reply_markup=menu_keyboard.category_list())
+        return TYPE_OF_LIST
 
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=())
-
-
-
-# def settings(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def address_list(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
-
-#     return ADDRESSES_LIST
-
-# def category_list(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
 
 
 # def (update: Update, context: CallbackContext) -> None:

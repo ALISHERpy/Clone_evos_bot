@@ -1,6 +1,6 @@
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
 from tgbot.handlers.menu import static_text as menu_text 
-from product.models import Category
+from product.models import Category, Product
 
 def home_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
@@ -73,7 +73,30 @@ def category_list() -> ReplyKeyboardMarkup:
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
+def product_list(letter: str) -> ReplyKeyboardMarkup:
+    products = Product.objects.filter(category__name=letter, parent=None)
+    n = len(products)
+    if n == 0:
+        buttons = [[ KeyboardButton(text=menu_text.back) ]]
+    elif n % 2 == 0:
+        buttons = [
+            [ 
+                KeyboardButton(text=products[number].name), 
+                KeyboardButton(text=products[number+1].name),
+            ] for number in range(0, n, 2)
+        ]
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
+    else:
+        buttons = [
+            [ 
+                KeyboardButton(text=products[number].name), 
+                KeyboardButton(text=products[number+1].name) 
+            ] for number in range(0, n - 1, 2)
+        ]
+        buttons.append([ KeyboardButton(text=products[n - 1].name) ])
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
 
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
 
 def comment_get_contact() -> ReplyKeyboardMarkup:
