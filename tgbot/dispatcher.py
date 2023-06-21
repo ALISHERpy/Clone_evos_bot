@@ -39,7 +39,7 @@ def setup_dispatcher(dp):
     conv_handler = ConversationHandler(
         entry_points=[CommandHandler("start", menu_handlers.home_page)],
         states={
-            HOME: [MessageHandler(Filters.text, menu_handlers.home_page)],
+            HOME: [ MessageHandler(Filters.text, menu_handlers.home_page) ],
             CHOOSE: [
                 MessageHandler(Filters.regex(f"^{menu_text.home_menu}$"),  menu_handlers.click_menu),
                 MessageHandler(Filters.regex(f"^{menu_text.home_my_orders}$"),  menu_handlers.my_orders),
@@ -56,9 +56,17 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu),
                 MessageHandler(Filters.text, menu_handlers.category_list),
             ],     
+            CATEGORY_LIST: [
+                MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu),
+                MessageHandler(Filters.text, menu_handlers.type_of_list),
+            ],
             TYPE_OF_LIST: [
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.category_list),
-                MessageHandler(Filters.text, menu_handlers.product_list),
+                MessageHandler(Filters.text, menu_handlers.choose_big_or_mini),
+            ],
+            CHOOSE_BIG_OR_MINI: [
+                MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.category_list),
+                MessageHandler(Filters.text, menu_handlers.choose_big_or_mini),
             ],
 
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
@@ -69,7 +77,6 @@ def setup_dispatcher(dp):
 
             LOCATION_CONFIRM:  [
                 MessageHandler(Filters.regex(f"^{location_text.yes}$"),  menu_handlers.category_list),
-                # Filters.regex(f"^{menu_text.address_send_location}$"),  menu_handlers.send_location,
                 MessageHandler(Filters.regex(f"^{location_text.no}$"),  menu_handlers.click_menu),
             ],
 

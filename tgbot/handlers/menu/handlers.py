@@ -8,7 +8,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardB
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
     
 from tgbot.states import *
-from product.models import Category
+from product.models import Product, Category
 
 
 from dtb.settings import ADMINS
@@ -57,19 +57,41 @@ def category_list(update: Update, context: CallbackContext) -> None:
     except Exception as e:
         pass
     
-    update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
+    update.message.reply_text(text="Bo'limni tanlang.", 
+                              reply_markup=menu_keyboard.category_list())
 
     
-    return TYPE_OF_LIST
+    return CATEGORY_LIST
 
-def product_list(update: Update, context: CallbackContext) -> None:
+def type_of_list(update: Update, context: CallbackContext) -> None:
     letter = update.message.text
 
     if Category.objects.filter(name=letter):
-        update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.product_list(letter=letter))
+        update.message.reply_text(text="Tanlang", 
+                                  reply_markup=menu_keyboard.product_list(letter=letter))
+
+        return CHOOSE_BIG_OR_MINI
     else:
-        update.message.reply_text(text="Something wrong!\nTry again, plase!", reply_markup=menu_keyboard.category_list())
+        update.message.reply_text(text="Something wrong!\nTry again, plase!", 
+                                  reply_markup=menu_keyboard.category_list())
+
         return TYPE_OF_LIST
+
+def choose_big_or_mini(update: Update, context: CallbackContext) -> None:
+    letter = update.message.text
+    obj = Product.objects.filter(parent=None, name=letter)[0]
+    txt = f"{obj.name}: {obj.description}\nNarxi: {obj.price} sum"
+    if obj.children.all():
+        update.message.reply_photo(photo=obj.photo,
+                                  caption=txt,
+                                  reply_markup=menu_keyboard.prices_inline(obj=obj, num=2))
+    else:
+        update.message.reply_photo(photo=obj.photo,
+                                  caption=txt,
+                                  reply_markup=menu_keyboard.prices_inline(obj=obj, num=1))
+    
+    return CHOOSE_BIG_OR_MINI
+
 
 
 
