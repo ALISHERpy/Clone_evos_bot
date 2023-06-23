@@ -1,6 +1,6 @@
-from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton
+from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, KeyboardButton, InlineKeyboardButton, InlineKeyboardMarkup
 from tgbot.handlers.menu import static_text as menu_text 
-from product.models import Category
+from product.models import Category, Product
 
 def home_keyboard() -> ReplyKeyboardMarkup:
     buttons = [
@@ -73,7 +73,50 @@ def category_list() -> ReplyKeyboardMarkup:
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
+def product_list(letter: str) -> ReplyKeyboardMarkup:
+    products = Product.objects.filter(category__name=letter, parent=None)
+    n = len(products)
+    if n == 0:
+        buttons = [[ KeyboardButton(text=menu_text.back) ]]
+    elif n % 2 == 0:
+        buttons = [
+            [ 
+                KeyboardButton(text=products[number].name), 
+                KeyboardButton(text=products[number+1].name),
+            ] for number in range(0, n, 2)
+        ]
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
+    else:
+        buttons = [
+            [ 
+                KeyboardButton(text=products[number].name), 
+                KeyboardButton(text=products[number+1].name) 
+            ] for number in range(0, n - 1, 2)
+        ]
+        buttons.append([ KeyboardButton(text=products[n - 1].name) ])
+        buttons.append([ KeyboardButton(text=menu_text.back) ])
 
+    return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
+
+def prices_inline(obj: Product, num: int) -> InlineKeyboardMarkup:
+    if num == 1:
+        buttons = [
+            [ InlineKeyboardButton(text=f"{obj.name} {obj.price}", callback_data='1') ],
+        ]
+    elif num == 2:
+        obj = obj.children.all()
+        buttons = [
+            [ 
+                InlineKeyboardButton(text=f"{obj[0].name} {obj[0].price}", callback_data='2'),
+                InlineKeyboardButton(text=f"{obj[1].name} {obj[1].price}", callback_data='3'),
+            ],
+        ]
+    else:
+        buttons = [
+            [ InlineKeyboardButton(text="Wrong") ],
+        ]
+
+    return InlineKeyboardMarkup(buttons)
 
 
 def comment_get_contact() -> ReplyKeyboardMarkup:

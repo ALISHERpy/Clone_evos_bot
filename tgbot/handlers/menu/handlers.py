@@ -3,19 +3,14 @@ from telegram.ext import CallbackContext
 
 from tgbot.handlers.menu import static_text
 from tgbot.handlers.menu import keyboards as menu_keyboard
-# from tgbot.handlers.menu import static_text as menu_
-# from tgbot.handlers.utils.info import extract_user_data_from_update
 from users.models import User
-# from tgbot.handlers.menu.keyboards import 
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardButton, Contact
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
     
 from tgbot.states import *
+from product.models import Product, Category
 
 
-
-
-#  = map(chr, range(8))
 from dtb.settings import ADMINS
 ADMINS=str(ADMINS)
 ADMINS=ADMINS.split(",")
@@ -35,19 +30,19 @@ def click_menu(update: Update, context: CallbackContext) -> None:
     return MENU
 
 def my_orders(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="....Jami: 134 000 sum", reply_markup=menu_keyboard.get_back())
+    update.message.reply_text(text="....Jami: 134 000 sum", 
+                              reply_markup=menu_keyboard.get_back())
 
     # return /
 
-# def settings(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 def address_list(update: Update, context: CallbackContext) -> None:
     u = BotUser.get_user(update, context)
 
     objs = Location.objects.filter(user=u)
 
-    update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list(objs=objs))
+    update.message.reply_text(text="Yetkazib berish manzilni tanlang", 
+                              reply_markup=menu_keyboard.address_list(objs=objs))
 
     return ADDRESSES_LIST
 
@@ -60,34 +55,44 @@ def category_list(update: Update, context: CallbackContext) -> None:
             if not objs:
                 Location.objects.create(user=u, latitude=121212, longitude=888,distanations=manzilimiz)
     except Exception as e:
-        # print(e)
         pass
     
-    update.message.reply_text(text="Bo'limni tanlang.", reply_markup=menu_keyboard.category_list())
+    update.message.reply_text(text="Bo'limni tanlang.", 
+                              reply_markup=menu_keyboard.category_list())
 
     
+    return CATEGORY_LIST
 
-    return TYPE_OF_LIST
+def type_of_list(update: Update, context: CallbackContext) -> None:
+    letter = update.message.text
+
+    if Category.objects.filter(name=letter):
+        update.message.reply_text(text="Tanlang", 
+                                  reply_markup=menu_keyboard.product_list(letter=letter))
+
+        return CHOOSE_BIG_OR_MINI
+    else:
+        update.message.reply_text(text="Something wrong!\nTry again, plase!", 
+                                  reply_markup=menu_keyboard.category_list())
+
+        return TYPE_OF_LIST
+
+def choose_big_or_mini(update: Update, context: CallbackContext) -> None:
+    letter = update.message.text
+    obj = Product.objects.filter(parent=None, name=letter)[0]
+    txt = f"{obj.name}: {obj.description}\nNarxi: {obj.price} sum"
+    if obj.children.all():
+        update.message.reply_photo(photo=obj.photo,
+                                  caption=txt,
+                                  reply_markup=menu_keyboard.prices_inline(obj=obj, num=2))
+    else:
+        update.message.reply_photo(photo=obj.photo,
+                                  caption=txt,
+                                  reply_markup=menu_keyboard.prices_inline(obj=obj, num=1))
+    
+    return CHOOSE_BIG_OR_MINI
 
 
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=())
-
-
-
-# def settings(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def address_list(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="Yetkazib berish manzilni tanlang", reply_markup=menu_keyboard.address_list())
-
-#     return ADDRESSES_LIST
-
-# def category_list(update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="Tanlang", reply_markup=menu_keyboard.category_list())
 
 
 # def (update: Update, context: CallbackContext) -> None:
@@ -116,7 +121,7 @@ def write_comment(update: Update, context: CallbackContext) -> None:
     
 #####set user's number  into database  by ALI
     user = update.message.from_user
-    u=BotUser.objects.get(user_id=user.id)
+    u = BotUser.objects.get(user_id=user.id)
     contact_number = update.message.contact["phone_number"]
     user_obj = BotUser.objects.get(user_id=user.id)
     user_obj.contact_number = contact_number
@@ -130,58 +135,47 @@ def write_comment(update: Update, context: CallbackContext) -> None:
 def comment_done(update: Update, context: CallbackContext) -> None:
     user = update.message.from_user
     #ortga bosganida
-    if update.message.text==static_text.back:
-        update.message.reply_text(f"Bosh sahifa ",
-         reply_markup=menu_keyboard.home_keyboard())
+    if update.message.text == static_text.back:
+        update.message.reply_text(f"Bosh sahifa ", reply_markup=menu_keyboard.home_keyboard())
     else:
-        number=BotUser.objects.get(user_id=user.id)   
-        number=number.contact_number
+        number = BotUser.objects.get(user_id=user.id)   
+        number = number.contact_number
 
         for admin_id in ADMINS:
-            context.bot.send_message(chat_id=admin_id, text=f"""
-            USER:  {user.full_name}\n@{user.username}\nCell phone: {number}
-
-            💬xabar yubordi👇🏻:
-            
-            {update.message.text}
-            """)
+            context.bot.send_message(chat_id=admin_id, text=
+            f"USER:  {user.full_name}\n" \
+            f"username: @{user.username}\n" \
+            f"Cell phone: {number}" \
+            f"\n\n💬xabar yubordi👇🏻:\n" \
+            f"{update.message.text}"
+            )
      
-        update.message.reply_text(f"{user.first_name} Fikr-mulohazangiz uchun rahmat " ,
-         reply_markup=menu_keyboard.home_keyboard())
+        update.message.reply_text(text=f"{user.first_name} Fikr-mulohazangiz uchun rahmat ",
+                                  reply_markup=menu_keyboard.home_keyboard())
         
     return CHOOSE
 
 
     # LANGUAGES SETTINGS....
 def settings(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text("Harakat tanlang:",
-         reply_markup=menu_keyboard.entry_lg())
+    update.message.reply_text("Harakat tanlang:", reply_markup=menu_keyboard.entry_lg())
     
     return GET_LANGUAGE
 
 def get_lg(update: Update, context: CallbackContext) -> int:
-    
     user = update.message.from_user
-    if update.message.text==static_text.back:
-        update.message.reply_text(f"Bosh sahifa ",
-         reply_markup=menu_keyboard.home_keyboard())
-         
+    
+    if update.message.text == static_text.back:
+        update.message.reply_text(f"Bosh sahifa ", reply_markup=menu_keyboard.home_keyboard())
     else:
-        update.message.reply_text("Tilni tanlang:",
-        reply_markup=menu_keyboard.choose_lg())
+        update.message.reply_text("Tilni tanlang:", reply_markup=menu_keyboard.choose_lg())
         
 
     return HAVE_DONE
 
 def have_done(update: Update, context: CallbackContext) -> int:
-    update.message.reply_text(f"✅ Tayyor !",
-        reply_markup=menu_keyboard.home_keyboard())
+    update.message.reply_text(f"✅ Tayyor !", reply_markup=menu_keyboard.home_keyboard())
         
     return CHOOSE
 
-# def get_back(update: Update, context: CallbackContext) -> int:
-        
-#     update.message.reply_text(f"Bosh sahifa ",
-#         reply_markup=menu_keyboard.home_keyboard())
-    
-#     # return ConversationHandler.END
+
