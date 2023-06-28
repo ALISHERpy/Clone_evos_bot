@@ -29,7 +29,7 @@ def location_handler(update: Update, context: CallbackContext) -> None:
     distance = f"{distance:.3f}"
 
     if distance is not None:
-        shipment_fee = (distance-15)*2000
+        shipment_fee = float(float(distance)-15)*2000
         update.message.reply_text(f"<b>Masofa</b>: {distance} km.\n\n<b>Manzil</b> : {name_distance}\n<b>Yitkazib berish</b>: {shipment_fee} so'm!",parse_mode='HTML')
         update.message.reply_text("Bu siz yuborgan manzilinggizmi?",reply_markup=yes_or_no())
         context.user_data['manzil'] = name_distance

@@ -8,7 +8,7 @@ from telegram.ext import CallbackContext
 
 from dtb.settings import TELEGRAM_LOGS_CHAT_ID
 from users.models import User
-
+from telegram.ext import ConversationHandler
 
 def send_stacktrace_to_tg_chat(update: Update, context: CallbackContext) -> None:
     u = User.get_user(update, context)
@@ -35,6 +35,7 @@ Return to /start
         chat_id=u.user_id,
         text=user_message,
     )
+    
 
     admin_message = f"⚠️⚠️⚠️ for {u.tg_str}:\n{message}"[:4090]
     if TELEGRAM_LOGS_CHAT_ID:
@@ -45,3 +46,5 @@ Return to /start
         )
     else:
         logging.error(admin_message)
+        
+    return ConversationHandler.END
