@@ -90,19 +90,44 @@ def choose_big_or_mini(update: Update, context: CallbackContext) -> None:
                                   caption=txt,
                                   reply_markup=menu_keyboard.prices_inline(obj=obj, num=1))
     
-    return CHOOSE_BIG_OR_MINI
+    return COUNT_OF_PRODUCT
 
+def simple(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    query.answer()
+    context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
+
+    obj = Product.objects.filter(name=query.data)[0]
+    context.bot.send_photo(chat_id=query.from_user.id, photo=obj.photo,
+                           caption=f"{obj.name}: {obj.description}\nNarxi: {obj.price}", 
+                           reply_markup=menu_keyboard.select_count_inline(num=1))
+
+    return TEST
+
+number = 1
+def simple1(update: Update, context: CallbackContext) -> None:
+    global number
+
+    query = update.callback_query
+    query.answer()
+    if query.data == '+':
+        number += 1
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+    elif query.data == '-' and number != 1:
+        number -= 1
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+
+    return TEST
+
+# def add_basket(, update: Update, context: CallbackContext) -> None:
+
+
+    # update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 
 
 # def (update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=())
 
 
 
