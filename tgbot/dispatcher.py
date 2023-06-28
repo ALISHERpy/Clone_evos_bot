@@ -68,6 +68,13 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.category_list),
                 MessageHandler(Filters.text, menu_handlers.choose_big_or_mini),
             ],
+            COUNT_OF_PRODUCT: [
+                # MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.category_list),
+                CallbackQueryHandler(menu_handlers.simple),
+            ],
+            TEST: [
+                CallbackQueryHandler(menu_handlers.simple1),
+            ],
 
             WRITE_COMMENT: [MessageHandler(Filters.contact, menu_handlers.write_comment)],
             COMMENT_DONE: [MessageHandler(Filters.text, menu_handlers.comment_done)],

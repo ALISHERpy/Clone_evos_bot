@@ -101,23 +101,50 @@ def product_list(letter: str) -> ReplyKeyboardMarkup:
 def prices_inline(obj: Product, num: int) -> InlineKeyboardMarkup:
     if num == 1:
         buttons = [
-            [ InlineKeyboardButton(text=f"{obj.name} {obj.price}", callback_data='1') ],
+            [ InlineKeyboardButton(text=f"{obj.name} {obj.price}", callback_data=f'{obj.name}') ],
         ]
     elif num == 2:
         obj = obj.children.all()
         buttons = [
             [ 
-                InlineKeyboardButton(text=f"{obj[0].name} {obj[0].price}", callback_data='2'),
-                InlineKeyboardButton(text=f"{obj[1].name} {obj[1].price}", callback_data='3'),
+                InlineKeyboardButton(text=f"{obj[0].name} {obj[0].price}", callback_data=f'{obj[0].name}'),
+                InlineKeyboardButton(text=f"{obj[1].name} {obj[1].price}", callback_data=f'{obj[1].name}'),
             ],
         ]
     else:
         buttons = [
-            [ InlineKeyboardButton(text="Wrong") ],
+            [ InlineKeyboardButton(text="Wrong", callback_data="Wrong") ],
         ]
 
     return InlineKeyboardMarkup(buttons)
 
+def select_count_inline(num: int) -> InlineKeyboardMarkup:
+    buttons = [
+        [
+            InlineKeyboardButton(text="-", callback_data="-"),
+            InlineKeyboardButton(text=str(num), callback_data=f"{str(num)}"),
+            InlineKeyboardButton(text="+", callback_data="+"),
+        ],
+        [
+            InlineKeyboardButton(text="Savatga qo\'shish", callback_data="basket")
+        ],
+    ]
+
+    return InlineKeyboardMarkup(buttons)
+
+def plus_or_minus(num: int, com: str) -> InlineKeyboardMarkup:
+    buttons = [
+        [
+            InlineKeyboardButton(text="-", callback_data="-"),
+            InlineKeyboardButton(text=str(num), callback_data=f"{str(num)}"),
+            InlineKeyboardButton(text="+", callback_data="+"),
+        ],
+        [
+            InlineKeyboardButton(text="Savatga qo\'shish", callback_data="basket")
+        ],
+    ]
+
+    return InlineKeyboardMarkup(buttons)
 
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
