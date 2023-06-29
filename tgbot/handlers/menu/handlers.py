@@ -8,7 +8,7 @@ from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update, KeyboardB
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
     
 from tgbot.states import *
-from product.models import Product, Category
+from product.models import Product, Category,Basket
 
 
 from dtb.settings import ADMINS
@@ -96,12 +96,13 @@ def simple(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
     context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
-
+    
     obj = Product.objects.filter(name=query.data)[0]
     context.bot.send_photo(chat_id=query.from_user.id, photo=obj.photo,
                            caption=f"{obj.name}: {obj.description}\nNarxi: {obj.price}", 
                            reply_markup=menu_keyboard.select_count_inline(num=1))
 
+    context.user_data['obj'] = obj
     return TEST
 
 number = 1
@@ -109,15 +110,40 @@ def simple1(update: Update, context: CallbackContext) -> None:
     global number
 
     query = update.callback_query
-    query.answer()
+
     if query.data == '+':
+        query.answer(text="qo'shildi...")
         number += 1
         query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
-    elif query.data == '-' and number != 1:
+    elif query.data == '-' and number != 1:        
+        query.answer(text="Kamaytirildi...")
         number -= 1
         query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
 
+
+
+    elif query.data == 'basket':
+        query.answer(text="✅Savatga qo'shildi")
+
+        obj=context.user_data['obj']  
+        the_product=Product.objects.get(name=obj.name)
+
+        user_name =query.from_user.username
+        the_user = BotUser.objects.get(username=user_name)
+
+        basket = Basket.objects.create(user=the_user, product=the_product,
+        count=number, price=int(number)*the_product.price)
+        context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
+
+        context.bot.send_message(chat_id=query.message.chat_id,
+                                 text="Bo'limni tanlang.",
+                                 reply_markup=menu_keyboard.category_list())
+        return CATEGORY_LIST 
+        
+        # context.user_data['shipment'] 
+
     return TEST
+
 
 # def add_basket(, update: Update, context: CallbackContext) -> None:
 
