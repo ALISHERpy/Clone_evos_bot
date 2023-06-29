@@ -108,42 +108,84 @@ def simple(update: Update, context: CallbackContext) -> None:
 number = 1
 def simple1(update: Update, context: CallbackContext) -> None:
     global number
-
     query = update.callback_query
 
     if query.data == '+':
-        query.answer(text="qo'shildi...")
         number += 1
-        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+        query.answer(text=f"{number} ta")
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number))
+    
     elif query.data == '-' and number != 1:        
-        query.answer(text="Kamaytirildi...")
         number -= 1
-        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
-
-
-
+        query.answer(text=f"{number} ta")
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number))
+    
     elif query.data == 'basket':
-        query.answer(text="✅Savatga qo'shildi")
+        query.answer(text="Savatga qo'shildi✅")
 
-        obj=context.user_data['obj']  
-        the_product=Product.objects.get(name=obj.name)
+        obj = Product.objects.get(id=context.user_data['obj'])
 
-        user_name =query.from_user.username
+        user_name = query.from_user.username
         the_user = BotUser.objects.get(username=user_name)
 
-        basket = Basket.objects.create(user=the_user, product=the_product,
-        count=number, price=int(number)*the_product.price)
+        if not Basket.objects.filter(product=obj):
+            Basket.objects.create(user=the_user, product=obj,
+                                  count=number, price=obj.price)
+        else:
+            basket = Basket.objects.filter(product=obj)
+            # print(f"\n\n\n\n{type(basket.count)}\n\n\n")
+            new_value = str(int(basket.count) + number)
+            Basket.objects.filter(product=obj).update(count=new_value)
+            
         context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
-
         context.bot.send_message(chat_id=query.message.chat_id,
                                  text="Bo'limni tanlang.",
-                                 reply_markup=menu_keyboard.category_list())
+                                 reply_markup=menu_keyboard.category_list(let="basket"))
+        
         return CATEGORY_LIST 
         
         # context.user_data['shipment'] 
 
     return TEST
 
+# def simple1(update: Update, context: CallbackContext) -> None:
+#     global number
+
+#     query = update.callback_query
+
+#     if query.data == '+':
+#         query.answer(text="qo'shildi...")
+#         number += 1
+#         query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+#     elif query.data == '-' and number != 1:        
+#         query.answer(text="Kamaytirildi...")
+#         number -= 1
+#         query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+
+
+
+#     elif query.data == 'basket':
+#         query.answer(text="✅Savatga qo'shildi")
+
+#         obj=context.user_data['obj']  
+#         the_product=Product.objects.get(name=obj.name)
+
+#         user_name =query.from_user.username
+#         the_user = BotUser.objects.get(username=user_name)
+
+#         basket = Basket.objects.create(user=the_user, product=the_product,
+#         count=number, price=int(number)*the_product.price)
+#         context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
+
+#         context.bot.send_message(chat_id=query.message.chat_id,
+#                                  text="Bo'limni tanlang.",
+#                                  reply_markup=menu_keyboard.category_list())
+#         return CATEGORY_LIST 
+        
+#         # context.user_data['shipment'] 
+
+#     return TEST
+#####################################################
 
 # def add_basket(, update: Update, context: CallbackContext) -> None:
 
@@ -154,6 +196,11 @@ def simple1(update: Update, context: CallbackContext) -> None:
 
 # def (update: Update, context: CallbackContext) -> None:
 #     update.message.reply_text(text="", reply_markup=menu_keyboard.())
+
+
+
+
+
 
 
 
