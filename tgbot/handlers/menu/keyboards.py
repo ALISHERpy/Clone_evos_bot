@@ -50,7 +50,7 @@ def address_list(objs) -> ReplyKeyboardMarkup:
 
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
-def category_list() -> ReplyKeyboardMarkup:
+def category_list(let=None) -> ReplyKeyboardMarkup:
     types = Category.objects.all()
     n = len(types)
     if n % 2 == 0:
@@ -71,6 +71,9 @@ def category_list() -> ReplyKeyboardMarkup:
         buttons.append([ KeyboardButton(text=types[n - 1].name) ])
         buttons.append([ KeyboardButton(text=menu_text.back) ])
 
+    if let == "basket":
+        buttons.insert(0, [ KeyboardButton(text=menu_text.show_basket) ])
+        
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
 def product_list(letter: str) -> ReplyKeyboardMarkup:
@@ -118,21 +121,7 @@ def prices_inline(obj: Product, num: int) -> InlineKeyboardMarkup:
 
     return InlineKeyboardMarkup(buttons)
 
-def select_count_inline(num: int) -> InlineKeyboardMarkup:
-    buttons = [
-        [
-            InlineKeyboardButton(text="-", callback_data="-"),
-            InlineKeyboardButton(text=str(num), callback_data=f"{str(num)}"),
-            InlineKeyboardButton(text="+", callback_data="+"),
-        ],
-        [
-            InlineKeyboardButton(text="Savatga qo\'shish", callback_data="basket")
-        ],
-    ]
-
-    return InlineKeyboardMarkup(buttons)
-
-def plus_or_minus(num: int, com: str) -> InlineKeyboardMarkup:
+def plus_or_minus(num: int) -> InlineKeyboardMarkup:
     buttons = [
         [
             InlineKeyboardButton(text="-", callback_data="-"),

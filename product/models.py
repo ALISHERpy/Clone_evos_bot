@@ -29,9 +29,6 @@ class Product(models.Model):
 
     parent = models.ForeignKey("self", on_delete=models.CASCADE, related_name="children", null=True, blank=True)
 
-    # number_of_product = models.PositiveSmallIntegerField(default=0)
-
-
     def __str__(self):
         return self.name
 
