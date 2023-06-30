@@ -130,11 +130,11 @@ def simple1(update: Update, context: CallbackContext) -> None:
         user_name = query.from_user.username
         the_user = BotUser.objects.get(username=user_name)
 
-        if not Basket.objects.filter(product=obj):
+        if not Basket.objects.filter(product=obj,user=the_user):
             Basket.objects.create(user=the_user, product=obj,
                                   count=number, price=obj.price)
         else:
-            basket = Basket.objects.filter(product=obj)[0]
+            basket = Basket.objects.filter(product=obj,user=the_user)[0]
             print(f"\n\n\n\n{basket}\n\n\n")
             new_value = basket.count + number
             Basket.objects.filter(product=obj).update(count=new_value)
@@ -158,7 +158,9 @@ def show_basket(update: Update, context: CallbackContext) -> None:
         letter += f"{el.count}✖️{el.product.name}\n"
     
     update.message.reply_text(text=letter)
-        
+
+    
+    return CATEGORY_LIST    
 
 
 
