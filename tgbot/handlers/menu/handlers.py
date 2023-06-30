@@ -95,49 +95,55 @@ def choose_big_or_mini(update: Update, context: CallbackContext) -> None:
 def simple(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
+    # query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number))
     context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
     
     obj = Product.objects.filter(name=query.data)[0]
     context.bot.send_photo(chat_id=query.from_user.id, photo=obj.photo,
                            caption=f"{obj.name}: {obj.description}\nNarxi: {obj.price}", 
-                           reply_markup=menu_keyboard.select_count_inline(num=1))
+                           reply_markup=menu_keyboard.plus_or_minus(num=1))
 
-    context.user_data['obj'] = obj
+    context.user_data['obj'] = obj.id
+
     return TEST
 
 number = 1
 def simple1(update: Update, context: CallbackContext) -> None:
     global number
-
     query = update.callback_query
 
     if query.data == '+':
-        query.answer(text="qo'shildi...")
         number += 1
-        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
+        query.answer(text=f"{number} ta")
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number))
+    
     elif query.data == '-' and number != 1:        
-        query.answer(text="Kamaytirildi...")
         number -= 1
-        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number, com='+'))
-
-
-
+        query.answer(text=f"{number} ta")
+        query.edit_message_reply_markup(reply_markup=menu_keyboard.plus_or_minus(num=number))
+    
     elif query.data == 'basket':
-        query.answer(text="✅Savatga qo'shildi")
+        query.answer(text="Savatga qo'shildi✅")
 
-        obj=context.user_data['obj']  
-        the_product=Product.objects.get(name=obj.name)
+        obj = Product.objects.get(id=context.user_data['obj'])
 
-        user_name =query.from_user.username
+        user_name = query.from_user.username
         the_user = BotUser.objects.get(username=user_name)
 
-        basket = Basket.objects.create(user=the_user, product=the_product,
-        count=number, price=int(number)*the_product.price)
+        if not Basket.objects.filter(product=obj):
+            Basket.objects.create(user=the_user, product=obj,
+                                  count=number, price=obj.price)
+        else:
+            basket = Basket.objects.filter(product=obj)[0]
+            print(f"\n\n\n\n{basket}\n\n\n")
+            new_value = basket.count + number
+            Basket.objects.filter(product=obj).update(count=new_value)
+            
         context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
-
         context.bot.send_message(chat_id=query.message.chat_id,
                                  text="Bo'limni tanlang.",
-                                 reply_markup=menu_keyboard.category_list())
+                                 reply_markup=menu_keyboard.category_list(let="basket"))
+        
         return CATEGORY_LIST 
         
         # context.user_data['shipment'] 
@@ -145,10 +151,16 @@ def simple1(update: Update, context: CallbackContext) -> None:
     return TEST
 
 
-# def add_basket(, update: Update, context: CallbackContext) -> None:
+def show_basket(update: Update, context: CallbackContext) -> None:
+    letter = "Savatda:\n"
+
+    for el in Basket.objects.filter(user__user_id=update.effective_user.id):
+        letter += f"{el.count}✖️{el.product.name}\n"
+    
+    update.message.reply_text(text=letter)
+        
 
 
-    # update.message.reply_text(text="", reply_markup=menu_keyboard.())
 
 
 

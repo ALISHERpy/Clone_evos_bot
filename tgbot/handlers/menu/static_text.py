@@ -7,7 +7,7 @@ address_my_addresses = "🗺 Mening manzillarim"
 address_send_location = "📍 Geolokatsiyani yuboring"
 
 comment_contact = "📞Mening raqamim"
-
+show_basket = "Savatni ko\'rish"
 back = "⬅️ Ortga"
 
 
