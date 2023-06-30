@@ -14,8 +14,10 @@ from product.models import Product, Category,Basket
 from dtb.settings import ADMINS
 ADMINS=str(ADMINS)
 ADMINS=ADMINS.split(",")
+
 from users.models import User as BotUser
 from users.models import Location
+
 
 def home_page(update: Update, context: CallbackContext) -> None:
     update.message.reply_text(text="Quyidagilardan birini tanlang...", 
@@ -30,7 +32,12 @@ def click_menu(update: Update, context: CallbackContext) -> None:
     return MENU
 
 def my_orders(update: Update, context: CallbackContext) -> None:
-    update.message.reply_text(text="....Jami: 134 000 sum", 
+
+    user_name = update.message.from_user.username
+    the_user = BotUser.objects.get(username=user_name)
+    obj=Basket.objects.filter(user=the_user)[0]
+
+    update.message.reply_text(text=f"{obj.price}000 sum\n.", 
                               reply_markup=menu_keyboard.get_back())
 
     # return /
@@ -159,7 +166,7 @@ def show_basket(update: Update, context: CallbackContext) -> None:
     
     update.message.reply_text(text=letter)
 
-    
+
     return CATEGORY_LIST    
 
 
