@@ -1,5 +1,6 @@
 from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
+from telegram import Bot
 
 from tgbot.handlers.menu import static_text
 from tgbot.handlers.menu import keyboards as menu_keyboard
@@ -36,9 +37,20 @@ def my_orders(update: Update, context: CallbackContext) -> None:
     user_name = update.message.from_user.username
     the_user = BotUser.objects.get(username=user_name)
     obj=Basket.objects.filter(user=the_user)[0]
+    mahsulot=int(obj.count*float(obj.price)*1000)
+    msg=f"<b>{obj.count}ta {obj.product}:</b> {mahsulot} sum\n"
+    
+    try:
+        shipment_fee=str(context.user_data['shipment']) 
+        msg=msg+ "<b>Yitkazib berish: <b/>" + shipment_fee + " sum"
+        msg=msg+f"<b>\nHammasi bo'lib:</b> {float(shipment_fee) + mahsulot}"
 
-    update.message.reply_text(text=f"{obj.price}000 sum\n.", 
-                              reply_markup=menu_keyboard.get_back())
+    except Exception as err:
+        # print(err)
+        pass
+        
+    update.message.reply_text(text=msg, 
+                              reply_markup=menu_keyboard.get_back(),parse_mode='HTML')
 
     # return /
 
@@ -66,7 +78,6 @@ def category_list(update: Update, context: CallbackContext) -> None:
     
     update.message.reply_text(text="Bo'limni tanlang.", 
                               reply_markup=menu_keyboard.category_list())
-
     
     return CATEGORY_LIST
 
@@ -87,7 +98,7 @@ def type_of_list(update: Update, context: CallbackContext) -> None:
 def choose_big_or_mini(update: Update, context: CallbackContext) -> None:
     letter = update.message.text
     obj = Product.objects.filter(parent=None, name=letter)[0]
-    txt = f"{obj.name}: {obj.description}\nNarxi: {obj.price} sum"
+    txt = f"{obj.name}: {obj.description}\nNarxi: {obj.price}.000 sum"
     if obj.children.all():
         update.message.reply_photo(photo=obj.photo,
                                   caption=txt,
@@ -158,24 +169,107 @@ def simple1(update: Update, context: CallbackContext) -> None:
     return TEST
 
 
+# from telegram import InputMediaPhoto, InputMediaPhotoCaption
+
 def show_basket(update: Update, context: CallbackContext) -> None:
-    letter = "Savatda:\n"
+    msg = "Savatda:\n"
 
+    summm=0   
     for el in Basket.objects.filter(user__user_id=update.effective_user.id):
-        letter += f"{el.count}✖️{el.product.name}\n"
+        x=el.count*float(el.product.price)*1000
+        msg += f"{el.count}✖️{el.product.name}  {x} sum \n"
+        summm+=x
+    msg+=f"     <b>Jami: {summm}</b>"
+    update.message.reply_text(text=msg,parse_mode="HTML",reply_markup=menu_keyboard.savat_inline())
+
     
-    update.message.reply_text(text=letter)
+    context.user_data['basket'] = update.effective_user.id
+
+    return CATEGORY_LIST
+
+def callback_basket(update: Update, context: CallbackContext) -> None:
+    query = update.callback_query
+    msg=''
+    
+    # print(query)
+
+    if query.data=="back":
+        query.answer(text="🔙")
+        context.bot.send_message(chat_id=query.message.chat_id,
+                                 text="Bo'limni tanlang.")
+        context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)                
 
 
-    return CATEGORY_LIST    
+    elif query.data=="basket_deleted":
+        
+        query.answer(text="🗑 ❌")
+        Basket.objects.filter(user__user_id=context.user_data['basket']).delete()
+        #tozalandi ....
+        context.bot.send_message(chat_id=query.message.chat_id,
+                                 text="Savatcha o'chirildi !\nBosh menyu:",reply_markup=menu_keyboard.home_keyboard())
+        
+        context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
+        return CHOOSE
+
+    
+    elif query.data== "order_confirmed":
+        query.answer(text="✅")
+        user=query.from_user
+    
+        number = BotUser.objects.get(user_id=context.user_data['basket'] )   
+        number = number.contact_number
+
+        msg=f"\n🆕Yangi buyurtma:👇🏻:\n"\
+            f"ism:  {user.full_name}\n" \
+            f"username: @{user.username}\n" \
+            f"Cell phone: +{number}\n\n" \
+            
+
+        summm=0
+        for el in Basket.objects.filter(user__user_id=context.user_data['basket']):
+            x=el.count*float(el.product.price)*1000
+            msg += f"{el.count}✖️{el.product.name}  {x} sum \n"
+            summm+=x
+    
+        msg+=f"     <b>Jami: {summm}</b>"
+        
+            
+
+        context.bot.send_message(chat_id=-1001973681939, text=msg,parse_mode="HTML")
+        context.bot.send_message(chat_id=query.message.chat_id,
+                                 text="✅Buyurtma qabul qilindi !\nBosh menyu:",reply_markup=menu_keyboard.home_keyboard())
+        
+        context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
+        return CHOOSE
+
+    
+    
+    return CATEGORY_LIST   
 
 
+    # user_name = update.message.from_user.username
+    # the_user = BotUser.objects.get(username=user_name)
+    # obj=Basket.objects.filter(user=the_user)[0]
+    # mahsulot=int(obj.count*float(obj.price)*1000)
+    # msg+=f"<b>{obj.count}ta {obj.product}:</b> {mahsulot} sum\n"
+    # try:
+    #     shipment_fee=str(context.user_data['shipment']) 
+    #     msg=msg+ "<b>Yitkazib berish: <b/>" + shipment_fee + " sum"
+    #     msg=msg+f"<b>\nJami:</b> {float(shipment_fee) + mahsulot}\n\n"
+    # except Exception as err:
+    #     # print(err)
+    #     pass
+        #     photo_urls.append(el.product.photo)
+    #     captions.append(el.product.description)
+
+    # media_group = [
+    #     InputMediaPhoto(media=photo_url, caption=caption)
+    #     for photo_url, caption in zip(photo_urls, captions)
+    # ]  
 
 
-
-# def (update: Update, context: CallbackContext) -> None:
-#     update.message.reply_text(text="", reply_markup=menu_keyboard.())
-
+    # bot.send_media_group(chat_id=update.message.from_user.id,text=letter+"testtt\n" ,media=media_group)
+        
 
 
 

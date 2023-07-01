@@ -60,6 +60,7 @@ def setup_dispatcher(dp):
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.click_menu),
                 MessageHandler(Filters.regex(f"^{menu_text.show_basket}$"), menu_handlers.show_basket),
                 MessageHandler(Filters.text, menu_handlers.type_of_list),
+                CallbackQueryHandler(menu_handlers.callback_basket),
             ],
             TYPE_OF_LIST: [
                 MessageHandler(Filters.regex(f"^{menu_text.back}$"), menu_handlers.category_list),
