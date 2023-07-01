@@ -68,7 +68,7 @@ def address_list(update: Update, context: CallbackContext) -> None:
 
 def category_list(update: Update, context: CallbackContext) -> None:
 
-    context.user_data['manzil2'] =update.message.text
+
     try:
         manzilimiz=context.user_data['manzil'] 
         if manzilimiz:
@@ -81,6 +81,8 @@ def category_list(update: Update, context: CallbackContext) -> None:
         pass
     
     
+    if update.message.text not in ("✅HA","⬅️ Ortga"):
+        context.user_data['manzil'] =update.message.text
 
     update.message.reply_text(text="Bo'limni tanlang.", 
                               reply_markup=menu_keyboard.category_list())
@@ -243,11 +245,11 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
             summm+=x
 
         try:
-            delevery_place = Location.objects.get(distanations__contains=context.user_data['manzil'])
+            delevery_place = Location.objects.get(distanations=context.user_data['manzil'])
             msg+=f"\nYitkazib berish: {delevery_place.shipment_cost} sum\n"
             summm+=delevery_place.shipment_cost
         except Exception as err:
-            print(err)
+            print("xato:"+err)
             # pass
 
         msg+=f"     <b>Jami: {summm}</b>"
