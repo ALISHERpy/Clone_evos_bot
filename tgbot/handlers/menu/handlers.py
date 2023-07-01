@@ -36,6 +36,7 @@ def my_orders(update: Update, context: CallbackContext) -> None:
 
     user_name = update.message.from_user.username
     the_user = BotUser.objects.get(username=user_name)
+
     obj=Basket.objects.filter(user=the_user)[0]
     mahsulot=int(obj.count*float(obj.price)*1000)
     msg=f"<b>{obj.count}ta {obj.product}:</b> {mahsulot} sum\n"
@@ -62,20 +63,25 @@ def address_list(update: Update, context: CallbackContext) -> None:
 
     update.message.reply_text(text="Yetkazib berish manzilni tanlang", 
                               reply_markup=menu_keyboard.address_list(objs=objs))
-
+    
     return ADDRESSES_LIST
 
 def category_list(update: Update, context: CallbackContext) -> None:
+
+    context.user_data['manzil2'] =update.message.text
     try:
         manzilimiz=context.user_data['manzil'] 
         if manzilimiz:
             u = BotUser.get_user(update, context)
             objs = Location.objects.filter(user=u,distanations=manzilimiz)
             if not objs:
-                Location.objects.create(user=u, latitude=121212, longitude=888,distanations=manzilimiz)
+                Location.objects.create(user=u, latitude=121212, longitude=888,
+                distanations=manzilimiz,shipment_cost=context.user_data['shipment'] )
     except Exception as e:
         pass
     
+    
+
     update.message.reply_text(text="Bo'limni tanlang.", 
                               reply_markup=menu_keyboard.category_list())
     
@@ -191,6 +197,7 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     msg=''
     
+    
     # print(query)
 
     if query.data=="back":
@@ -215,14 +222,18 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
     elif query.data== "order_confirmed":
         query.answer(text="✅")
         user=query.from_user
-    
-        number = BotUser.objects.get(user_id=context.user_data['basket'] )   
-        number = number.contact_number
+        
 
-        msg=f"\n🆕Yangi buyurtma:👇🏻:\n"\
+        msg=f"\n🆕Yangi buyurtma 👇🏻\n\n"\
             f"ism:  {user.full_name}\n" \
             f"username: @{user.username}\n" \
-            f"Cell phone: +{number}\n\n" \
+
+        try:
+            number = BotUser.objects.get(user_id=context.user_data['basket'] )   
+            number = number.contact_number
+            msg+=f"Cell phone: +{number}\n\n" 
+        except:
+            pass
             
 
         summm=0
@@ -230,7 +241,15 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
             x=el.count*float(el.product.price)*1000
             msg += f"{el.count}✖️{el.product.name}  {x} sum \n"
             summm+=x
-    
+
+        try:
+            delevery_place = Location.objects.get(distanations__contains=context.user_data['manzil'])
+            msg+=f"\nYitkazib berish: {delevery_place.shipment_cost} sum\n"
+            summm+=delevery_place.shipment_cost
+        except Exception as err:
+            print(err)
+            # pass
+
         msg+=f"     <b>Jami: {summm}</b>"
         
             
