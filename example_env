@@ -1,0 +1,5 @@
+DJANGO_DEBUG=True
+DATABASE_URL=sqlite:///db.sqlite3
+ADMINS=1131104579,757652114
+#DATABASE_URL=postgres://postgres:postgres@db:5432/postgres  # when using PostgreSQL via docker-compose
+TELEGRAM_TOKEN=6071614512:AAE_UY1kUx8I4c243yUs412FogfvtBXJlwwAlU

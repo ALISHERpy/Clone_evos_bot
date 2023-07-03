@@ -81,6 +81,8 @@ class Location(CreateTracker):
     latitude = models.FloatField()
     longitude = models.FloatField()
     distanations=models.CharField(max_length=256)
+    shipment_cost = models.FloatField(default=0)
+    
 
     objects = GetOrNoneManager()
 

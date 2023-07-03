@@ -167,3 +167,16 @@ def entry_lg() -> ReplyKeyboardMarkup:
         
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
+def savat_inline() -> InlineKeyboardMarkup:
+    buttons = [
+        [
+            InlineKeyboardButton(text=menu_text.order_conf, callback_data="order_confirmed"),
+        ],
+        [   
+            InlineKeyboardButton(text=menu_text.delete_basket, callback_data="basket_deleted"),
+            InlineKeyboardButton(text=menu_text.back, callback_data="back"),
+        ],
+    ]
+
+    return InlineKeyboardMarkup(buttons)
+
