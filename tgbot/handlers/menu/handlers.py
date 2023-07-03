@@ -134,10 +134,11 @@ def simple1(update: Update, context: CallbackContext) -> None:
             Basket.objects.create(user=the_user, product=obj,
                                   count=number, price=obj.price)
         else:
-            basket = Basket.objects.filter(product=obj)[0]
-            print(f"\n\n\n\n{basket}\n\n\n")
-            new_value = basket.count + number
+            new_value = Basket.objects.filter(product=obj)[0].count + number
             Basket.objects.filter(product=obj).update(count=new_value)
+            # print(f"\n\n\n\n{basket}\n\n\n")
+            # new_value = basket.count + number
+            # Basket.objects.filter(product=obj).update(count=new_value)
             
         context.bot.delete_message(chat_id=query.from_user.id, message_id=query.message.message_id)
         context.bot.send_message(chat_id=query.message.chat_id,
