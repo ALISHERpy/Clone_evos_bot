@@ -135,6 +135,19 @@ def plus_or_minus(num: int) -> InlineKeyboardMarkup:
 
     return InlineKeyboardMarkup(buttons)
 
+def savat_inline() -> InlineKeyboardMarkup:
+    buttons = [
+        [
+            InlineKeyboardButton(text=menu_text.order_conf, callback_data="order_confirmed"),
+        ],
+        [   
+            InlineKeyboardButton(text=menu_text.delete_basket, callback_data="basket_deleted"),
+            InlineKeyboardButton(text=menu_text.back, callback_data="back"),
+        ],
+    ]
+
+    return InlineKeyboardMarkup(buttons)
+
 def comment_get_contact() -> ReplyKeyboardMarkup:
     buttons = [
         [ KeyboardButton(text=menu_text.comment_contact, request_contact=True), ],
@@ -151,7 +164,7 @@ def get_back() -> ReplyKeyboardMarkup:
  
 
 def choose_lg() -> ReplyKeyboardMarkup:
-    x=menu_text.languages_key.split(',')
+    x = menu_text.languages_key.split(',')
 
     buttons = [
         [ KeyboardButton(text=x[0]), ],
@@ -167,16 +180,4 @@ def entry_lg() -> ReplyKeyboardMarkup:
         
     return ReplyKeyboardMarkup(buttons, resize_keyboard=True, one_time_keyboard=True)
 
-def savat_inline() -> InlineKeyboardMarkup:
-    buttons = [
-        [
-            InlineKeyboardButton(text=menu_text.order_conf, callback_data="order_confirmed"),
-        ],
-        [   
-            InlineKeyboardButton(text=menu_text.delete_basket, callback_data="basket_deleted"),
-            InlineKeyboardButton(text=menu_text.back, callback_data="back"),
-        ],
-    ]
-
-    return InlineKeyboardMarkup(buttons)
 

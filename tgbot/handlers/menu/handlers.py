@@ -37,23 +37,20 @@ def my_orders(update: Update, context: CallbackContext) -> None:
     user_name = update.message.from_user.username
     the_user = BotUser.objects.get(username=user_name)
 
-    obj=Basket.objects.filter(user=the_user)[0]
-    mahsulot=int(obj.count*float(obj.price)*1000)
-    msg=f"<b>{obj.count}ta {obj.product}:</b> {mahsulot} sum\n"
+    obj = Basket.objects.filter(user=the_user)[0]
+    mahsulot = int(obj.count*float(obj.price)*1000)
+    msg = f"<b>{obj.count}ta {obj.product}:</b> {mahsulot} sum\n"
     
     try:
-        shipment_fee=str(context.user_data['shipment']) 
-        msg=msg+ "<b>Yitkazib berish: <b/>" + shipment_fee + " sum"
-        msg=msg+f"<b>\nHammasi bo'lib:</b> {float(shipment_fee) + mahsulot}"
+        shipment_fee = str(context.user_data['shipment']) 
+        msg = msg+ "<b>Yetkazib berish: <b/>" + shipment_fee + " sum"
+        msg = msg+f"<b>\nHammasi bo'lib:</b> {float(shipment_fee) + mahsulot}"
 
     except Exception as err:
-        # print(err)
         pass
         
-    update.message.reply_text(text=msg, 
-                              reply_markup=menu_keyboard.get_back(),parse_mode='HTML')
-
-    # return /
+    update.message.reply_text(text=msg, reply_markup=menu_keyboard.get_back(),
+                              parse_mode='HTML')
 
 
 def address_list(update: Update, context: CallbackContext) -> None:
@@ -185,11 +182,11 @@ def show_basket(update: Update, context: CallbackContext) -> None:
 
     summm=0   
     for el in Basket.objects.filter(user__user_id=update.effective_user.id):
-        x=el.count*float(el.product.price)*1000
+        x=el.count*float(el.product.price)
         msg += f"{el.count}✖️{el.product.name}  {x} sum \n"
         summm+=x
-    msg+=f"     <b>Jami: {summm}</b>"
-    update.message.reply_text(text=msg,parse_mode="HTML",reply_markup=menu_keyboard.savat_inline())
+    msg += f"     <b>Jami: {summm}</b>"
+    update.message.reply_text(text=msg,parse_mode="HTML", reply_markup=menu_keyboard.savat_inline())
 
     
     context.user_data['basket'] = update.effective_user.id
@@ -198,10 +195,7 @@ def show_basket(update: Update, context: CallbackContext) -> None:
 
 def callback_basket(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
-    msg=''
-    
-    
-    # print(query)
+    msg = ''
 
     if query.data=="back":
         query.answer(text="🔙")
@@ -234,26 +228,26 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
         try:
             number = BotUser.objects.get(user_id=context.user_data['basket'] )   
             number = number.contact_number
-            msg+=f"Cell phone: +{number}\n\n" 
+            msg += f"Cell phone: +{number}\n\n" 
         except:
             pass
             
 
         summm=0
         for el in Basket.objects.filter(user__user_id=context.user_data['basket']):
-            x=el.count*float(el.product.price)*1000
+            x = el.count*float(el.product.price)*1000
             msg += f"{el.count}✖️{el.product.name}  {x} sum \n"
-            summm+=x
+            summm += x
 
         try:
             delevery_place = Location.objects.get(distanations=context.user_data['manzil'])
-            msg+=f"\nYitkazib berish: {delevery_place.shipment_cost} sum\n"
-            summm+=delevery_place.shipment_cost
+            msg += f"\nYitkazib berish: {delevery_place.shipment_cost} sum\n"
+            summm += delevery_place.shipment_cost
         except Exception as err:
-            print("xato:"+err)
+            print("xato:" + err)
             # pass
 
-        msg+=f"     <b>Jami: {summm}</b>"
+        msg += f"     <b>Jami: {summm}</b>"
         
             
 
@@ -312,7 +306,6 @@ def comment(update: Update, context: CallbackContext) -> None:
 
 def write_comment(update: Update, context: CallbackContext) -> None:
     
-#####set user's number  into database  by ALI
     user = update.message.from_user
     u = BotUser.objects.get(user_id=user.id)
     contact_number = update.message.contact["phone_number"]

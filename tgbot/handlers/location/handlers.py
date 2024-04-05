@@ -25,7 +25,7 @@ def location_handler(update: Update, context: CallbackContext) -> None:
     
 
     distance = get_distance(my_latitude, my_longitude, user_latitude, user_longitude)
-    distance=distance/1000
+    distance = distance/1000
     distance = f"{distance:.3f}"
 
     if distance is not None:
