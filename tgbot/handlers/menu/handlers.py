@@ -247,7 +247,7 @@ def callback_basket(update: Update, context: CallbackContext) -> None:
             print("xato:" + err)
             # pass
 
-        msg += f"     <b>Jami: {summm}</b>"
+        msg+=f"<b>Jami: {summm}</b>"
         
             
 
